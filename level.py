@@ -17,7 +17,7 @@ class Level:
         self.create_map()
 
     def create_map(self):
-        for row_index, row in enumerate(MAP):
+        for row_index, row in enumerate(MAP_ARRAY):
             for col_index, col in enumerate(row):
                 # create sprites at correct positions
                 x = col_index * TILE_SIZE
