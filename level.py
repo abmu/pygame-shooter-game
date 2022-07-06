@@ -2,6 +2,7 @@ import pygame
 from settings import *
 from tile import Tile
 from player import Player
+from weapon import Weapon
 from bullet import Bullet
 
 
@@ -27,15 +28,15 @@ class Level:
                     Tile((x,y),[self.visible_sprites,self.obstacle_sprites])
                 elif col == 'P':
                     self.player = Player((x,y),[self.visible_sprites],self.obstacle_sprites,self.create_bullet)
+                    self.weapon = Weapon(self.player.rect,[self.visible_sprites],self.visible_sprites.get_middle_pos())
 
     def create_bullet(self):
-        Bullet((self.player.get_pos()),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites.get_middle_pos(self.player),pygame.mouse.get_pos())
+        Bullet(self.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites.get_middle_pos(),pygame.mouse.get_pos())
 
     def run(self):
         # update and draw the level map
         self.visible_sprites.draw(self.player)
         self.visible_sprites.update()
-
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -46,7 +47,7 @@ class CameraGroup(pygame.sprite.Group):
         self.half_height = self.screen.get_size()[1] // 2
         self.offset = pygame.math.Vector2()
 
-    def get_middle_pos(self,player):
+    def get_middle_pos(self):
         return (self.half_width,self.half_height)
 
     def draw(self,player):
@@ -54,7 +55,9 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
 
-        # apply offset to each sprite
-        for sprite in self.sprites():
+        # sprites drawn later will be drawn on top
+        # draw weapon on top of the tiles
+        for sprite in sorted(self.sprites(),key = lambda sprite: sprite.__class__.__name__):
+            # apply offset to each sprite
             offset_pos = sprite.rect.topleft - self.offset
             self.screen.blit(sprite.image,offset_pos)

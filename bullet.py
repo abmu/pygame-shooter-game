@@ -1,18 +1,20 @@
 import pygame
+from settings import *
 
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self,pos,groups,obstacle_sprites,middle_pos,mouse_pos):
         # bullet setup
         super().__init__(groups)
-        self.image = pygame.image.load('graphics/bullet.png').convert_alpha()
-        self.rect = self.image.get_rect(topleft = pos)
+        orig_image = pygame.image.load('graphics/bullet.png').convert_alpha()
+        orig_rect = orig_image.get_rect(topleft = pos)
+        self.set_direction(middle_pos,mouse_pos)
+        self.rotate(orig_image,orig_rect)
         self.pos_x = self.rect.x
         self.pos_y = self.rect.y
 
         # movement
-        self.set_direction(middle_pos,mouse_pos)
-        self.speed = 0.5
+        self.speed = 10
 
         self.obstacle_sprites = obstacle_sprites
 
@@ -26,6 +28,12 @@ class Bullet(pygame.sprite.Sprite):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
 
+    def rotate(self,image,rect):
+        # rotate bullet about center by angle between unit vector i and self.direction
+        angle = self.direction.angle_to(pygame.math.Vector2(1,0)) 
+        self.image = pygame.transform.rotate(image,angle)
+        self.rect = self.image.get_rect(center = rect.center)
+
     def move(self,speed):
         # store accourate position values in self.pos_x and self.pos_y
         # self.rect.x and self.rect.y will round values
@@ -34,6 +42,13 @@ class Bullet(pygame.sprite.Sprite):
 
         self.rect.x = self.pos_x
         self.rect.y = self.pos_y
+        self.collision()
+
+    def collision(self):
+        # handle wall collisions
+        for sprite in self.obstacle_sprites:
+            if sprite.rect.colliderect(self.rect):
+                self.kill()
 
     def update(self):
         # update bullet

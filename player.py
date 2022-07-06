@@ -16,6 +16,9 @@ class Player(pygame.sprite.Sprite):
         # shooting
         self.pressed = False
         self.create_bullet = create_bullet
+        self.attacking = False
+        self.attack_cooldown = 100
+        self.attack_time = None
 
         self.obstacle_sprites = obstacle_sprites
 
@@ -23,27 +26,31 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
 
         # change player direction
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.direction.x = -1
-        elif keys[pygame.K_RIGHT]:
+        elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.direction.x = 1
         else:
             self.direction.x = 0
 
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_UP] or keys[pygame.K_w]:
             self.direction.y = -1
-        elif keys[pygame.K_DOWN]:
+        elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
             self.direction.y = 1
         else:
             self.direction.y = 0
 
         # shoot bullet
-        if pygame.mouse.get_pressed()[0]: # check if lmb clicked
+        if pygame.mouse.get_pressed()[0] and not self.attacking: # check if lmb clicked
             self.pressed = True
         else:
             if self.pressed:
                 self.create_bullet()
                 self.pressed = False
+
+                # begin attack cooldown
+                self.attacking = True
+                self.attack_time = pygame.time.get_ticks()
 
     def move(self,speed):
         # normalize direction vector to ensure it is a unit vector
@@ -75,12 +82,16 @@ class Player(pygame.sprite.Sprite):
                     elif self.direction.y > 0: # moving down
                         self.rect.bottom = sprite.rect.top
 
-    def get_pos(self):
-        # subtract half the bullet width and height
-        # make bullet center start at player center
-        return (self.rect.centerx-8,self.rect.centery-8)
+    def cooldowns(self):
+        current_time = pygame.time.get_ticks()
+
+        # check if attack cooldown has finished
+        if self.attacking:
+            if current_time - self.attack_time >= self.attack_cooldown:
+                self.attacking = False
 
     def update(self):
         # update player
         self.input()
+        self.cooldowns()
         self.move(self.speed)
