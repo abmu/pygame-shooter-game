@@ -15,7 +15,6 @@ class Bullet(pygame.sprite.Sprite):
 
         # movement
         self.speed = 10
-
         self.obstacle_sprites = obstacle_sprites
 
     def set_direction(self,middle_pos,mouse_pos):

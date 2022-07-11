@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
 
         # movement
         self.direction = pygame.math.Vector2()
-        self.speed = 5
+        self.obstacle_sprites = obstacle_sprites
 
         # shooting
         self.pressed = False
@@ -20,7 +20,11 @@ class Player(pygame.sprite.Sprite):
         self.attack_cooldown = 100
         self.attack_time = None
 
-        self.obstacle_sprites = obstacle_sprites
+        # stats
+        self.speed = 5
+        self.max_health = 100
+        self.health = self.max_health
+        self.points = 0
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -89,6 +93,9 @@ class Player(pygame.sprite.Sprite):
         if self.attacking:
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.attacking = False
+
+    def get_health(self):
+        return (self.health,self.max_health)
 
     def update(self):
         # update player
