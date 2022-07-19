@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.pressed = False
         self.create_bullet = create_bullet
         self.attacking = False
-        self.attack_cooldown = 100
+        self.attack_cooldown = 200
         self.attack_time = None
 
         # stats
@@ -71,7 +71,7 @@ class Player(pygame.sprite.Sprite):
         # handle horizontal collisons
         if direction == 'horizontal':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect):
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ == 'Tile':
                     if self.direction.x < 0: # moving left
                         self.rect.left = sprite.rect.right
                     elif self.direction.x > 0: # moving right
@@ -80,7 +80,7 @@ class Player(pygame.sprite.Sprite):
         # handle vertical collisions
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect):
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ == 'Tile':
                     if self.direction.y < 0: # moving up
                         self.rect.top = sprite.rect.bottom
                     elif self.direction.y > 0: # moving down

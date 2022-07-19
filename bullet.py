@@ -14,8 +14,11 @@ class Bullet(pygame.sprite.Sprite):
         self.pos_y = self.rect.y
 
         # movement
-        self.speed = 10
         self.obstacle_sprites = obstacle_sprites
+
+        # stats
+        self.speed = 1
+        self.power = 50
 
     def set_direction(self,middle_pos,mouse_pos):
         # calculate bullet direction vector
@@ -47,7 +50,11 @@ class Bullet(pygame.sprite.Sprite):
         # handle wall collisions
         for sprite in self.obstacle_sprites:
             if sprite.rect.colliderect(self.rect):
-                self.kill()
+                if sprite.__class__.__name__ == 'Tile':
+                    self.kill()
+                elif sprite.__class__.__name__ == 'Enemy':
+                    sprite.take_damage(self.power)
+                    self.kill()
 
     def update(self):
         # update bullet
