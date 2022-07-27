@@ -3,7 +3,7 @@ from settings import *
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites,middle_pos,mouse_pos):
+    def __init__(self,pos,groups,obstacle_sprites,middle_pos,mouse_pos,add_points):
         # bullet setup
         super().__init__(groups)
         orig_image = pygame.image.load('graphics/bullet.png').convert_alpha()
@@ -15,9 +15,10 @@ class Bullet(pygame.sprite.Sprite):
 
         # movement
         self.obstacle_sprites = obstacle_sprites
+        self.add_points = add_points
 
         # stats
-        self.speed = 1
+        self.speed = 10
         self.power = 50
 
     def set_direction(self,middle_pos,mouse_pos):
@@ -54,6 +55,9 @@ class Bullet(pygame.sprite.Sprite):
                     self.kill()
                 elif sprite.__class__.__name__ == 'Enemy':
                     sprite.take_damage(self.power)
+                    # if the enemy sprite dies award the player a certain amount of points
+                    if not sprite.alive():
+                        self.add_points(sprite.get_worth())
                     self.kill()
 
     def update(self):

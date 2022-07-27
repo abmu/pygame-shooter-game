@@ -49,7 +49,7 @@ class Player(pygame.sprite.Sprite):
             self.pressed = True
         else:
             if self.pressed:
-                self.create_bullet()
+                self.create_bullet(self.add_points)
                 self.pressed = False
 
                 # begin attack cooldown
@@ -94,8 +94,16 @@ class Player(pygame.sprite.Sprite):
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.attacking = False
 
+    def take_damage(self,power):
+        self.health -= power
+        if self.health <= 0:
+            print('dead')
+
     def get_health(self):
         return (self.health,self.max_health)
+
+    def add_points(self,points):
+        self.points += points
 
     def update(self):
         # update player

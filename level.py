@@ -39,8 +39,8 @@ class Level:
                     enemy = Enemy((x,y),[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites)
                     HealthBar(enemy,[self.visible_sprites])
 
-    def create_bullet(self):
-        Bullet(self.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites.get_middle_pos(),pygame.mouse.get_pos())
+    def create_bullet(self,add_points):
+        Bullet(self.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites.get_middle_pos(),pygame.mouse.get_pos(),add_points)
 
     def run(self):
         # update and draw the level map and ui

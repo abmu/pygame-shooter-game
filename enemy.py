@@ -11,7 +11,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # movement
         self.direction = pygame.math.Vector2()
-        self.plaayer_distance = None
+        self.player_distance = None
         self.obstacle_sprites = obstacle_sprites
 
         # attack
@@ -24,7 +24,8 @@ class Enemy(pygame.sprite.Sprite):
         self.max_health = 100
         self.health = self.max_health
         self.power = 20
-        self.notice_radius = 100
+        self.notice_radius = 500
+        self.worth = 50
 
     def move(self,speed):
         # normalize direction vector to ensure it is a unit vector
@@ -41,7 +42,7 @@ class Enemy(pygame.sprite.Sprite):
         # handle horizontal collisons
         if direction == 'horizontal':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ == 'Tile':
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ == 'Tile' or sprite.__class__.__name__ == 'Player':
                     if self.direction.x < 0: # moving left
                         self.rect.left = sprite.rect.right
                     elif self.direction.x > 0: # moving right
@@ -50,7 +51,7 @@ class Enemy(pygame.sprite.Sprite):
         # handle vertical collisions
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ == 'Tile':
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ == 'Tile' or sprite.__class__.__name__ == 'Player':
                     if self.direction.y < 0: # moving up
                         self.rect.top = sprite.rect.bottom
                     elif self.direction.y > 0: # moving down
@@ -60,22 +61,41 @@ class Enemy(pygame.sprite.Sprite):
         # calculate player distance from enemy
         enemy_vector = pygame.math.Vector2(self.rect.center)
         player_vector = pygame.math.Vector2(player.rect.center)
-        self.distance = (player_vector-enemy_vector).magnitude()
+        self.player_distance = (player_vector-enemy_vector).magnitude()
 
-        # check to see if enemy is already at the player
-        # if they are then they shouldn't move 
-        if self.distance > 0:
+        # check if enemy is touching player and not currently attacking
+        if player.rect.colliderect(self.rect) and not self.attacking:
+            player.take_damage(self.power)
+
+            # begin attack cooldown
+            self.attacking = True
+            self.attack_time = pygame.time.get_ticks()
+        # check if player is within the enemy's notice radius
+        elif self.player_distance <= self.notice_radius:
             self.direction = (player_vector-enemy_vector)
+        # make the enemy stop moving if there is no player within notice radius
         else:
             self.direction = pygame.math.Vector2()
+
+    def cooldowns(self):
+        current_time = pygame.time.get_ticks()
+
+        # check if attack cooldown has finished
+        if self.attacking:
+            if current_time - self.attack_time >= self.attack_cooldown:
+                self.attacking = False
 
     def take_damage(self,power):
         self.health -= power
         if self.health <= 0:
             self.kill()
 
+    def get_worth(self):
+        return self.worth
+
     def update(self):
         # upadte enemy
+        self.cooldowns()
         self.move(self.speed)
 
     # method with access to the player object
