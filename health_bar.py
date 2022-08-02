@@ -7,17 +7,13 @@ class HealthBar(pygame.sprite.Sprite):
         # health bar setup
         super().__init__(groups)
         self.enemy = enemy
-        self.screen = pygame.display.get_surface()
         self.set_bar_dimensions()
         self.rect = self.image.get_rect(topleft = self.get_pos())
+        self.draw_priority = 2
 
     def set_bar_dimensions(self):
         # calculate current to max health ratio
         ratio = self.enemy.health / self.enemy.max_health
-
-        # destroy health bar if enemy dies
-        if ratio <= 0:
-            self.kill()
 
         # make new health bar image
         self.image = pygame.Surface((40*ratio,10))

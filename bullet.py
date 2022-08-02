@@ -12,6 +12,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rotate(orig_image,orig_rect)
         self.pos_x = self.rect.x
         self.pos_y = self.rect.y
+        self.draw_priority = 3
 
         # movement
         self.obstacle_sprites = obstacle_sprites
@@ -55,8 +56,8 @@ class Bullet(pygame.sprite.Sprite):
                     self.kill()
                 elif sprite.__class__.__name__ == 'Enemy':
                     sprite.take_damage(self.power)
-                    # if the enemy sprite dies award the player a certain amount of points
-                    if not sprite.alive():
+                    # if the enemy sprite dies and respawns, ie. their health regenerates, award the player a certain amount of points
+                    if sprite.health == sprite.max_health:
                         self.add_points(sprite.get_worth())
                     self.kill()
 

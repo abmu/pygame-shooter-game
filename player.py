@@ -8,6 +8,8 @@ class Player(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = pygame.image.load('graphics/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
+        self.start_pos = pos
+        self.draw_priority = 4
 
         # movement
         self.direction = pygame.math.Vector2()
@@ -97,7 +99,9 @@ class Player(pygame.sprite.Sprite):
     def take_damage(self,power):
         self.health -= power
         if self.health <= 0:
-            print('dead')
+            # make the player respawn once they die
+            self.rect.topleft = self.start_pos
+            self.health = self.max_health
 
     def get_health(self):
         return (self.health,self.max_health)

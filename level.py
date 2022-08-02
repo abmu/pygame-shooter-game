@@ -68,7 +68,7 @@ class CameraGroup(pygame.sprite.Group):
 
         # sprites drawn later will be drawn on top
         # draw weapon on top of the tiles
-        for sprite in sorted(self.sprites(),key = lambda sprite: sprite.__class__.__name__):
+        for sprite in sorted(self.sprites(),key = lambda sprite: sprite.draw_priority):
             # apply offset to each sprite
             offset_pos = sprite.rect.topleft - self.offset
             self.screen.blit(sprite.image,offset_pos)

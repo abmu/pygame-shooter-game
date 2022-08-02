@@ -6,7 +6,7 @@ class UI:
     def __init__(self):
         # general setup
         self.screen = pygame.display.get_surface()
-        self.font = pygame.font.Font(UI_FONT,UI_FONT_SIZE)
+        self.font = pygame.font.Font(FONT,UI_FONT_SIZE)
 
         # bar setup
         self.health_rect = pygame.Rect(10,10,BAR_WIDTH,BAR_HEIGHT)

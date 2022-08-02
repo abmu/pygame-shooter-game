@@ -1,6 +1,7 @@
 import pygame
 import sys
 from settings import *
+from overworld import Overworld
 from level import Level
 
 
@@ -12,7 +13,24 @@ class Game:
         pygame.display.set_caption('Shooter Game')
         self.clock = pygame.time.Clock()
 
+        self.status = "overworld"
+        self.overworld = Overworld()
+        # self.level = Level()
+
+    def create_overworld(self):
+        self.overworld = Overworld()
+        self.status = "overworld"
+
+    def create_level(self):
         self.level = Level()
+        self.status = "level"
+
+    def display_screen(self):
+        # display the overworld screen or the level screen depending on whaat has happened in game
+        if self.status == "overworld":
+            self.overworld.run()
+        else:
+            self.level.run()
 
     def run(self):
         # game loop
@@ -24,7 +42,7 @@ class Game:
 
             # update screen
             self.screen.fill('black')
-            self.level.run()
+            self.display_screen()
             pygame.display.update()
             self.clock.tick(FPS)
 

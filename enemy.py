@@ -8,6 +8,8 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = pygame.image.load('graphics/enemy.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
+        self.draw_priority = 1
+        self.start_pos = pos
 
         # movement
         self.direction = pygame.math.Vector2()
@@ -23,7 +25,7 @@ class Enemy(pygame.sprite.Sprite):
         self.speed = 3
         self.max_health = 100
         self.health = self.max_health
-        self.power = 20
+        self.power = 10
         self.notice_radius = 500
         self.worth = 50
 
@@ -39,19 +41,19 @@ class Enemy(pygame.sprite.Sprite):
         self.collision('vertical')
 
     def collision(self,direction):
-        # handle horizontal collisons
+        # handle horizontal collisons with tiles and other enemies
         if direction == 'horizontal':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ == 'Tile' or sprite.__class__.__name__ == 'Player':
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy') and sprite.rect is not self.rect:
                     if self.direction.x < 0: # moving left
                         self.rect.left = sprite.rect.right
                     elif self.direction.x > 0: # moving right
                         self.rect.right = sprite.rect.left
 
-        # handle vertical collisions
+        # handle vertical collisions with tiles and other enemies
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ == 'Tile' or sprite.__class__.__name__ == 'Player':
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy') and sprite.rect is not self.rect:
                     if self.direction.y < 0: # moving up
                         self.rect.top = sprite.rect.bottom
                     elif self.direction.y > 0: # moving down
@@ -88,7 +90,9 @@ class Enemy(pygame.sprite.Sprite):
     def take_damage(self,power):
         self.health -= power
         if self.health <= 0:
-            self.kill()
+            # make the enemy respawn once they die
+            self.rect.topleft = self.start_pos
+            self.health = self.max_health
 
     def get_worth(self):
         return self.worth

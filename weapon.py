@@ -10,6 +10,7 @@ class Weapon(pygame.sprite.Sprite):
         self.middle_pos = middle_pos
         self.orig_image = pygame.image.load('graphics/pistol.png').convert_alpha()
         self.update()
+        self.draw_priority = 5
 
     def set_direction(self):
         # calculate weapon direction vector
