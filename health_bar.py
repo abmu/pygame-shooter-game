@@ -3,17 +3,19 @@ from settings import *
 
 
 class HealthBar(pygame.sprite.Sprite):
-    def __init__(self,enemy,groups):
+    def __init__(self,enemy_rect,get_health,groups):
         # health bar setup
         super().__init__(groups)
-        self.enemy = enemy
+        self.enemy_rect = enemy_rect
+        self.get_health = get_health
         self.set_bar_dimensions()
         self.rect = self.image.get_rect(topleft = self.get_pos())
         self.draw_priority = 2
 
     def set_bar_dimensions(self):
         # calculate current to max health ratio
-        ratio = self.enemy.health / self.enemy.max_health
+        enemy_health = self.get_health()
+        ratio = enemy_health[0] / enemy_health[1]
 
         # make new health bar image
         self.image = pygame.Surface((40*ratio,10))
@@ -21,7 +23,7 @@ class HealthBar(pygame.sprite.Sprite):
 
     def get_pos(self):
         # make position of the health bar underneath the enemy
-        return (self.enemy.rect.centerx-20,self.enemy.rect.centery+30)
+        return (self.enemy_rect.centerx-20,self.enemy_rect.centery+30)
 
     def update(self):
         # update enemy health bar

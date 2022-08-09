@@ -1,9 +1,10 @@
 import pygame
 from settings import *
+from health_bar import HealthBar
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites):
+    def __init__(self,pos,groups,obstacle_sprites,visible_sprites):
         # enemy setup
         super().__init__(groups)
         self.image = pygame.image.load('graphics/enemy.png').convert_alpha()
@@ -21,6 +22,11 @@ class Enemy(pygame.sprite.Sprite):
         self.attack_cooldown = 1000
         self.attack_time = None
 
+        # hit
+        self.hit = False
+        self.hit_cooldown = 100
+        self.hit_time = None
+
         # stats
         self.speed = 3
         self.max_health = 100
@@ -28,6 +34,8 @@ class Enemy(pygame.sprite.Sprite):
         self.power = 10
         self.notice_radius = 500
         self.worth = 50
+
+        self.health_bar = HealthBar(self.rect,self.get_health,[visible_sprites])
 
     def move(self,speed):
         # normalize direction vector to ensure it is a unit vector
@@ -87,15 +95,36 @@ class Enemy(pygame.sprite.Sprite):
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.attacking = False
 
+        # check if hit cooldown has finished
+        if self.hit:
+            if current_time - self.hit_time >= self.hit_cooldown:
+                self.hit = False
+                self.image = pygame.image.load('graphics/enemy.png').convert_alpha()
+
     def take_damage(self,power):
-        self.health -= power
-        if self.health <= 0:
-            # make the enemy respawn once they die
-            self.rect.topleft = self.start_pos
-            self.health = self.max_health
+        if not self.hit:
+            # load hit image
+            self.image = pygame.image.load('graphics/enemy-2.png').convert_alpha()
+
+            # make the enemy take damage
+            self.health -= power
+            if self.health <= 0:
+                # make the enemy respawn once they die
+                self.hit = False
+                self.image = pygame.image.load('graphics/enemy.png').convert_alpha()
+                self.rect.topleft = self.start_pos
+                self.health = self.max_health
+
+            # begin hit cooldown
+            self.hit = True
+            self.hit_time = pygame.time.get_ticks()
+
 
     def get_worth(self):
         return self.worth
+
+    def get_health(self):
+        return (self.health,self.max_health)
 
     def update(self):
         # upadte enemy

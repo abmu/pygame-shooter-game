@@ -1,9 +1,10 @@
 import pygame
 from settings import *
+from weapon import Weapon
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites,create_bullet):
+    def __init__(self,pos,groups,obstacle_sprites,visible_sprites,create_bullet):
         # player setup
         super().__init__(groups)
         self.image = pygame.image.load('graphics/player.png').convert_alpha()
@@ -22,11 +23,18 @@ class Player(pygame.sprite.Sprite):
         self.attack_cooldown = 200
         self.attack_time = None
 
+        # hit
+        self.hit = False
+        self.hit_cooldown = 100
+        self.hit_time = None
+
         # stats
         self.speed = 5
         self.max_health = 100
         self.health = self.max_health
         self.points = 0
+
+        self.weapon = Weapon(self.rect,[visible_sprites],visible_sprites.get_middle_pos())
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -96,12 +104,29 @@ class Player(pygame.sprite.Sprite):
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.attacking = False
 
+        # check if hit cooldown has finished
+        if self.hit:
+            if current_time - self.hit_time >= self.hit_cooldown:
+                self.hit = False
+                self.image = pygame.image.load('graphics/player.png').convert_alpha()
+
     def take_damage(self,power):
-        self.health -= power
-        if self.health <= 0:
-            # make the player respawn once they die
-            self.rect.topleft = self.start_pos
-            self.health = self.max_health
+        if not self.hit:
+            # load hit image
+            self.image = pygame.image.load('graphics/player-2.png').convert_alpha()
+
+            # make the player take damage
+            self.health -= power
+            if self.health <= 0:
+                # make the player respawn once they die
+                self.hit = False
+                self.image = pygame.image.load('graphics/player.png').convert_alpha()
+                self.rect.topleft = self.start_pos
+                self.health = self.max_health
+
+            # begin hit cooldown
+            self.hit = True
+            self.hit_time = pygame.time.get_ticks()
 
     def get_health(self):
         return (self.health,self.max_health)

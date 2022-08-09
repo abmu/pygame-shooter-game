@@ -2,15 +2,13 @@ import pygame
 from settings import *
 from tile import Tile
 from player import Player
-from weapon import Weapon
 from bullet import Bullet
 from enemy import Enemy
-from health_bar import HealthBar
 from ui import UI
 
 
 class Level:
-    def __init__(self):
+    def __init__(self,create_overworld):
         # get display surface
         self.screen = pygame.display.get_surface()
 
@@ -24,6 +22,8 @@ class Level:
         # user interface
         self.ui = UI()
 
+        self.create_overworld = create_overworld
+
     def create_map(self):
         for row_index, row in enumerate(MAP_ARRAY):
             for col_index, col in enumerate(row):
@@ -33,14 +33,12 @@ class Level:
                 if col == 'x':
                     Tile((x,y),[self.visible_sprites,self.obstacle_sprites])
                 elif col == 'P':
-                    self.player = Player((x,y),[self.visible_sprites],self.obstacle_sprites,self.create_bullet)
-                    self.weapon = Weapon(self.player.rect,[self.visible_sprites],self.visible_sprites.get_middle_pos())
+                    self.player = Player((x,y),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites,self.create_bullet)
                 elif col == 'E':
-                    enemy = Enemy((x,y),[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites)
-                    HealthBar(enemy,[self.visible_sprites])
+                    enemy = Enemy((x,y),[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites)
 
     def create_bullet(self,add_points):
-        Bullet(self.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites.get_middle_pos(),pygame.mouse.get_pos(),add_points)
+        Bullet(self.player.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites.get_middle_pos(),pygame.mouse.get_pos(),add_points)
 
     def run(self):
         # update and draw the level map and ui

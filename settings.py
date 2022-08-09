@@ -67,7 +67,7 @@ FONT = 'graphics/fonts/Lato/Lato-Black.ttf'
 
 # overworld
 OW_FONT_SIZE = 40
-OW_FONT_COLOUR = 'white'
+OW_FONT_COLOUR = 'black'
 OW_PRIMARY_COLOUR = 'gray10'
 OW_SECONDARY_COLOUR = 'gray3'
 
