@@ -1,16 +1,18 @@
 import pygame
+import random
 from settings import *
 from health_bar import HealthBar
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites,visible_sprites):
+    def __init__(self,spawn_positions,groups,obstacle_sprites,visible_sprites):
         # enemy setup
         super().__init__(groups)
+        self.spawn_positions = spawn_positions
+        self.last_pos = None
         self.image = pygame.image.load('graphics/enemy.png').convert_alpha()
-        self.rect = self.image.get_rect(topleft = pos)
+        self.rect = self.image.get_rect(topleft = self.get_spawn_pos())
         self.draw_priority = 1
-        self.start_pos = pos
 
         # movement
         self.direction = pygame.math.Vector2()
@@ -36,6 +38,21 @@ class Enemy(pygame.sprite.Sprite):
         self.worth = 50
 
         self.health_bar = HealthBar(self.rect,self.get_health,[visible_sprites])
+
+    def get_spawn_pos(self):
+        # choose a random pos from the enemy pos dict
+        # ensure that the pos is not taken and is not a None value
+        spawn_pos = random.choice(list(self.spawn_positions.keys()))
+        while self.spawn_positions[spawn_pos]: # self.spawn_positions[key] <- boolean value saying whether or not pos is currently taken
+            spawn_pos = random.choice(list(self.spawn_positions.keys()))
+            
+        # make the previous pos occupied available and the current pos unavailable
+        if self.last_pos is not None:
+            self.spawn_positions[self.last_pos] = False
+        self.spawn_positions[spawn_pos] = True
+        self.last_pos = spawn_pos
+
+        return spawn_pos
 
     def move(self,speed):
         # normalize direction vector to ensure it is a unit vector
@@ -112,7 +129,7 @@ class Enemy(pygame.sprite.Sprite):
                 # make the enemy respawn once they die
                 self.hit = False
                 self.image = pygame.image.load('graphics/enemy.png').convert_alpha()
-                self.rect.topleft = self.start_pos
+                self.rect.topleft = self.get_spawn_pos()
                 self.health = self.max_health
 
             # begin hit cooldown

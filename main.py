@@ -18,15 +18,15 @@ class Game:
 
     def create_overworld(self):
         self.overworld = Overworld(self.create_level)
-        self.status = "overworld"
+        self.status = 'overworld'
 
     def create_level(self):
         self.level = Level(self.create_overworld)
-        self.status = "level"
+        self.status = 'level'
 
     def display_screen(self):
         # display the overworld screen or the level screen depending on what has happened in game
-        if self.status == "overworld":
+        if self.status == 'overworld':
             self.screen.fill('white')
             self.overworld.run()
         else:

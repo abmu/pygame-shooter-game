@@ -20,7 +20,7 @@ class Bullet(pygame.sprite.Sprite):
 
         # stats
         self.speed = 10
-        self.power = 50
+        self.power = 34
 
     def set_direction(self,middle_pos,mouse_pos):
         # calculate bullet direction vector

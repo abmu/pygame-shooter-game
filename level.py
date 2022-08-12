@@ -1,6 +1,7 @@
 import pygame
 from settings import *
 from tile import Tile
+from coin import Coin
 from player import Player
 from bullet import Bullet
 from enemy import Enemy
@@ -25,6 +26,8 @@ class Level:
         self.create_overworld = create_overworld
 
     def create_map(self):
+        enemy_pos = {}
+        coin_pos = {}
         for row_index, row in enumerate(MAP_ARRAY):
             for col_index, col in enumerate(row):
                 # create sprites at correct positions
@@ -33,9 +36,20 @@ class Level:
                 if col == 'x':
                     Tile((x,y),[self.visible_sprites,self.obstacle_sprites])
                 elif col == 'P':
-                    self.player = Player((x,y),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites,self.create_bullet)
+                    self.player = Player((x,y),[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_bullet)
                 elif col == 'E':
-                    enemy = Enemy((x,y),[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites)
+                    enemy_pos[(x,y)] = False # ie. (x,y) position is not currently occupied
+                elif col == 'C':
+                    coin_pos[(x,y)] = False
+
+        # the number of coins and enemies should be less than the number of possible positions
+        # create enemy sprites in random enemy positions
+        for count in range(len(enemy_pos)-1):
+            Enemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites)
+
+        # create coin sprites in random coin positions
+        for count in range(len(coin_pos)-1):
+            Coin(coin_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites)
 
     def create_bullet(self,add_points):
         Bullet(self.player.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites.get_middle_pos(),pygame.mouse.get_pos(),add_points)

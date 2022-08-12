@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.pressed = False
         self.create_bullet = create_bullet
         self.attacking = False
-        self.attack_cooldown = 200
+        self.attack_cooldown = 100
         self.attack_time = None
 
         # hit
@@ -123,6 +123,8 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.image.load('graphics/player.png').convert_alpha()
                 self.rect.topleft = self.start_pos
                 self.health = self.max_health
+                # deduct points if the player dies
+                self.add_points(-100)
 
             # begin hit cooldown
             self.hit = True
@@ -133,6 +135,9 @@ class Player(pygame.sprite.Sprite):
 
     def add_points(self,points):
         self.points += points
+        if self.points <= 0:
+            # set the points to 0 if their points goes below 0
+            self.points = 0
 
     def update(self):
         # update player

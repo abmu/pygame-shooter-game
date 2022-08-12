@@ -6,7 +6,7 @@ class Button:
     def __init__(self,text,pos,func):
         # general setup
         self.screen = pygame.display.get_surface()
-        self.font = pygame.font.Font(FONT,OW_FONT_SIZE)
+        self.font = pygame.font.Font(FONT,OW_SECONDARY_FONT_SIZE)
         self.pressed = False
         self.func = func
 
@@ -25,7 +25,7 @@ class Button:
         mouse_pos = pygame.mouse.get_pos()
         # check if the mouse is touching the text button
         if self.text_rect.collidepoint(mouse_pos):
-            self.colour = OW_PRIMARY_COLOUR
+            self.colour = OW_SECONDARY_COLOUR
             # check if the left mouse button has been pressed
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
@@ -39,7 +39,7 @@ class Button:
 
 
     def click_func(self):
-        print('clicked!')
+        # print('clicked!')
         self.func()
 
     def display(self):
