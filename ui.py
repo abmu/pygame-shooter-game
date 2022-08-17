@@ -28,13 +28,21 @@ class UI:
         pygame.draw.rect(self.screen,UI_SECONDARY_COLOUR,self.health_rect,1)
 
     def draw_points_text(self,player):
-        # draw text
+        # draw points text
         text_surf = self.font.render('POINTS: ' + str(int(player.points)),False,UI_FONT_COLOUR)
         text_rect = text_surf.get_rect(topleft = (20,40))
         pygame.draw.rect(self.screen,UI_PRIMARY_COLOUR,text_rect.inflate(20,0))
         self.screen.blit(text_surf,text_rect)
 
-    def display(self,player):
+    def draw_timer_text(self,timer):
+        # draw timer text
+        text_surf = self.font.render(f'{timer.get_timer_time()}',False,UI_FONT_COLOUR)
+        text_rect = text_surf.get_rect(topleft = (20,75))
+        pygame.draw.rect(self.screen,UI_PRIMARY_COLOUR,text_rect.inflate(20,0))
+        self.screen.blit(text_surf,text_rect)
+
+    def display(self,player,timer):
         # update and draw ui
         self.draw_health_bar(player)
         self.draw_points_text(player)
+        self.draw_timer_text(timer)

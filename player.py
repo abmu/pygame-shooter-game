@@ -4,13 +4,16 @@ from weapon import Weapon
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites,visible_sprites,create_bullet):
+    def __init__(self,pos,groups,obstacle_sprites,visible_sprites,create_bullet,create_pause):
         # player setup
         super().__init__(groups)
         self.image = pygame.image.load('graphics/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
         self.start_pos = pos
         self.draw_priority = 4
+
+        self.create_pause = create_pause
+        self.pause_pressed = False
 
         # movement
         self.direction = pygame.math.Vector2()
@@ -29,7 +32,9 @@ class Player(pygame.sprite.Sprite):
         self.hit_time = None
 
         # stats
-        self.speed = 5
+        self.min_speed = 4
+        self.max_speed = 6
+        self.speed = self.min_speed
         self.max_health = 100
         self.health = self.max_health
         self.points = 0
@@ -54,8 +59,20 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.y = 0
 
+        # make player move faster
+        if keys[pygame.K_LSHIFT]:
+            # gradually increase speed
+            self.speed += 0.05
+            if self.speed >= self.max_speed:
+                self.speed = self.max_speed
+        else:
+            # gradually decrease speed
+            self.speed -= 0.05
+            if self.speed <= self.min_speed:
+                self.speed = self.min_speed
+
         # shoot bullet
-        if pygame.mouse.get_pressed()[0] and not self.attacking: # check if lmb clicked
+        if (pygame.mouse.get_pressed()[0] or keys[pygame.K_SPACE]) and not self.attacking: # check if lmb clicked
             self.pressed = True
         else:
             if self.pressed:
@@ -65,6 +82,14 @@ class Player(pygame.sprite.Sprite):
                 # begin attack cooldown
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
+
+        # open pause menu
+        if keys[pygame.K_ESCAPE]:
+            self.pause_pressed = True
+        else:
+            if self.pause_pressed:
+                self.create_pause()
+                self.pause_pressed = False
 
     def move(self,speed):
         # normalize direction vector to ensure it is a unit vector
@@ -124,7 +149,7 @@ class Player(pygame.sprite.Sprite):
                 self.rect.topleft = self.start_pos
                 self.health = self.max_health
                 # deduct points if the player dies
-                self.add_points(-100)
+                self.add_points(-1000)
 
             # begin hit cooldown
             self.hit = True

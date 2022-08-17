@@ -40,12 +40,12 @@ class Bullet(pygame.sprite.Sprite):
 
     def move(self,speed):
         # store accourate position values in self.pos_x and self.pos_y
-        # self.rect.x and self.rect.y will round values
+        # self.rect.x and self.rect.y will truncate values
         self.pos_x += self.direction.x * speed
         self.pos_y += self.direction.y * speed
 
-        self.rect.x = self.pos_x
-        self.rect.y = self.pos_y
+        self.rect.x = round(self.pos_x)
+        self.rect.y = round(self.pos_y)
         self.collision()
 
     def collision(self):

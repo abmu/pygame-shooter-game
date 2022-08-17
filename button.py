@@ -6,7 +6,7 @@ class Button:
     def __init__(self,text,pos,func):
         # general setup
         self.screen = pygame.display.get_surface()
-        self.font = pygame.font.Font(FONT,OW_SECONDARY_FONT_SIZE)
+        self.font = pygame.font.Font(FONT,OW_FONT_SIZE)
         self.pressed = False
         self.func = func
 
@@ -18,7 +18,7 @@ class Button:
     def draw_text(self):
         # draw the button text
         self.text_surf = self.font.render(self.text,False,self.colour)
-        self.text_rect = self.text_surf.get_rect(center = self.pos)
+        self.text_rect = self.text_surf.get_rect(topleft = self.pos)
         self.screen.blit(self.text_surf,self.text_rect)
 
     def check_click(self):

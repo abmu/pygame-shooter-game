@@ -11,6 +11,8 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH,HEIGHT))
         pygame.display.set_caption('Shooter Game')
+        icon = pygame.image.load("graphics/icon.png")
+        pygame.display.set_icon(icon)
         self.clock = pygame.time.Clock()
 
         # default game screen
