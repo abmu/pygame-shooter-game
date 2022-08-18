@@ -4,7 +4,7 @@ import time
 class Timer:
     def __init__(self):
         # timer setup
-        self.total_time = 300 # seconds
+        self.total_time = 150 # seconds
         self.start_time = time.time()
 
     def get_time_elapsed(self):

@@ -1,11 +1,13 @@
 import pygame
+from pygame import mixer
 from settings import *
 from text import Text
 from button import Button
+from slider import Slider
 
 
 class SettingsScreen:
-    def __init__(self,create_title):
+    def __init__(self,create_title,sounds):
         # general setup
         self.screen = pygame.display.get_surface()
         self.font = pygame.font.Font(FONT,OW_FONT_SIZE)
@@ -13,7 +15,9 @@ class SettingsScreen:
 
         # text and buttons setup
         self.music_text = Text('Music',(WIDTH/2-300,HEIGHT/2-200))
+        self.music_slider = Slider(mixer.music,(WIDTH/2-100,HEIGHT/2-190))
         self.volume_text = Text('Volume',(WIDTH/2-300,HEIGHT/2-150))
+        self.volume_slider = Slider(sounds,(WIDTH/2-100,HEIGHT/2-140))
         self.controls_text = Text('Controls',(WIDTH/2-300,HEIGHT/2-100))
         self.create_controls()
         self.back_button = Button('BACK',(10,5),self.create_title)
@@ -35,7 +39,9 @@ class SettingsScreen:
     def run(self):
         # update and draw the settings screen
         self.music_text.display()
+        self.music_slider.display()
         self.volume_text.display()
+        self.volume_slider.display()
         self.controls_text.display()
         for key in self.keys:
             key.display()

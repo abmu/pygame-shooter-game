@@ -1,9 +1,10 @@
 import pygame
 import sys
+from pygame import mixer
 from settings import *
 from overworld import Overworld
 from level import Level
-
+from sounds import Sounds
 
 class Game:
     def __init__(self):
@@ -11,20 +12,26 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH,HEIGHT))
         pygame.display.set_caption('Shooter Game')
-        icon = pygame.image.load("graphics/icon.png")
+        icon = pygame.image.load(ICON)
         pygame.display.set_icon(icon)
         self.clock = pygame.time.Clock()
+
+        # sound setup
+        mixer.music.load('audio/8-bit-Monsters.mp3')
+        self.sounds = Sounds()
 
         # default game screen
         self.create_overworld()
 
     def create_overworld(self):
-        self.overworld = Overworld(self.create_level)
+        self.overworld = Overworld(self.create_level,self.sounds)
         self.status = 'overworld'
+        mixer.music.stop()
 
     def create_level(self):
-        self.level = Level(self.create_overworld)
+        self.level = Level(self.create_overworld,self.sounds)
         self.status = 'level'
+        mixer.music.play(-1)
 
     def display_screen(self):
         # display the overworld screen or the level screen depending on what has happened in game

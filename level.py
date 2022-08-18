@@ -11,9 +11,12 @@ from pause_menu import PauseMenu
 
 
 class Level:
-    def __init__(self,create_overworld):
+    def __init__(self,create_overworld,sounds):
         # get display surface
         self.screen = pygame.display.get_surface()
+
+        # sound setup
+        self.sounds = sounds
 
         # sprite group and sprite setup
         self.visible_sprites = CameraGroup()
@@ -39,7 +42,7 @@ class Level:
                 if col == 'x':
                     Tile((x,y),[self.visible_sprites,self.obstacle_sprites])
                 elif col == 'P':
-                    self.player = Player((x,y),[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_bullet,self.create_pause)
+                    self.player = Player((x,y),[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_bullet,self.create_pause,self.sounds)
                 elif col == 'E':
                     enemy_pos[(x,y)] = False # ie. (x,y) position is not currently occupied
                 elif col == 'C':
@@ -48,11 +51,11 @@ class Level:
         # the number of coins and enemies should be less than the number of possible positions
         # create enemy sprites in random enemy positions
         for count in range(10):
-            Enemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites)
+            Enemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.sounds)
 
         # create coin sprites in random coin positions
         for count in range(3):
-            Coin(coin_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites)
+            Coin(coin_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.sounds)
 
     def create_bullet(self,add_points):
         Bullet(self.player.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites.get_middle_pos(),pygame.mouse.get_pos(),add_points)

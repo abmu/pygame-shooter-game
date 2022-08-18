@@ -25,7 +25,7 @@ class Button:
         mouse_pos = pygame.mouse.get_pos()
         # check if the mouse is touching the text button
         if self.text_rect.collidepoint(mouse_pos):
-            self.colour = OW_SECONDARY_COLOUR
+            self.colour = OW_PRIMARY_COLOUR
             # check if the left mouse button has been pressed
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True

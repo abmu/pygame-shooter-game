@@ -5,17 +5,18 @@ from settings_screen import SettingsScreen
 
 
 class Overworld:
-    def __init__(self,create_level):
+    def __init__(self,create_level,sounds):
         # general setup
         self.create_level = create_level
         self.create_title()
+        self.sounds = sounds
 
     def create_title(self):
         self.title_screen = TitleScreen(self.create_level,self.create_settings)
         self.status = 'title'
 
     def create_settings(self):
-        self.settings_screen = SettingsScreen(self.create_title)
+        self.settings_screen = SettingsScreen(self.create_title,self.sounds)
         self.status = 'options'
 
     def run(self):

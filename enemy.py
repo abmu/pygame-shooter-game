@@ -1,11 +1,12 @@
 import pygame
 import random
+from pygame import mixer
 from settings import *
 from health_bar import HealthBar
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self,spawn_positions,groups,obstacle_sprites,visible_sprites):
+    def __init__(self,spawn_positions,groups,obstacle_sprites,visible_sprites,sounds):
         # enemy setup
         super().__init__(groups)
         self.spawn_positions = spawn_positions
@@ -38,6 +39,9 @@ class Enemy(pygame.sprite.Sprite):
         self.worth = 50
 
         self.health_bar = HealthBar(self.rect,self.get_health,[visible_sprites])
+
+        # sound setup
+        self.sounds = sounds
 
     def get_spawn_pos(self):
         # choose a random pos from the enemy pos dict
@@ -135,6 +139,7 @@ class Enemy(pygame.sprite.Sprite):
             # begin hit cooldown
             self.hit = True
             self.hit_time = pygame.time.get_ticks()
+            self.sounds.play('hit_ping')
 
 
     def get_worth(self):

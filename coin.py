@@ -1,10 +1,11 @@
 import pygame
 import random
+from pygame import mixer
 from settings import *
 
 
 class Coin(pygame.sprite.Sprite):
-    def __init__(self,spawn_positions,groups,obstacle_sprites):
+    def __init__(self,spawn_positions,groups,obstacle_sprites,sounds):
         # coin setup
         super().__init__(groups)
         self.spawn_positions = spawn_positions
@@ -18,11 +19,14 @@ class Coin(pygame.sprite.Sprite):
 
         # hit animation
         self.hit = False
-        self.hit_cooldown = 200
+        self.hit_cooldown = 100
         self.hit_time = None
 
         # stats
         self.worth = 500
+
+        # sound setup
+        self.sounds = sounds
 
     def get_spawn_pos(self):
         # choose a random pos from the coin pos dict
@@ -52,6 +56,7 @@ class Coin(pygame.sprite.Sprite):
                         # begin hit animation cooldown
                         self.hit = True
                         self.hit_time = pygame.time.get_ticks()
+                        self.sounds.play('coin_ping')
 
     def cooldowns(self):
         current_time = pygame.time.get_ticks()

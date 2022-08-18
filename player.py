@@ -1,10 +1,11 @@
 import pygame
+from pygame import mixer
 from settings import *
 from weapon import Weapon
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites,visible_sprites,create_bullet,create_pause):
+    def __init__(self,pos,groups,obstacle_sprites,visible_sprites,create_bullet,create_pause,sounds):
         # player setup
         super().__init__(groups)
         self.image = pygame.image.load('graphics/player.png').convert_alpha()
@@ -40,6 +41,9 @@ class Player(pygame.sprite.Sprite):
         self.points = 0
 
         self.weapon = Weapon(self.rect,[visible_sprites],visible_sprites.get_middle_pos())
+
+        # sound setup
+        self.sounds = sounds
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -77,6 +81,7 @@ class Player(pygame.sprite.Sprite):
         else:
             if self.pressed:
                 self.create_bullet(self.add_points)
+                self.sounds.play('shoot_ping')
                 self.pressed = False
 
                 # begin attack cooldown
@@ -154,6 +159,7 @@ class Player(pygame.sprite.Sprite):
             # begin hit cooldown
             self.hit = True
             self.hit_time = pygame.time.get_ticks()
+            self.sounds.play('hit_ping')
 
     def get_health(self):
         return (self.health,self.max_health)

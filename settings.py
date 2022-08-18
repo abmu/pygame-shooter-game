@@ -4,6 +4,8 @@ HEIGHT = 720
 FPS = 60
 TILE_SIZE = 64
 
+ICON = 'graphics/icon.png'
+
 CONTROLS = [
 ['W / UP','Move up'],
 ['A / LEFT','Move left'],
@@ -78,8 +80,8 @@ FONT_2 = 'graphics/fonts/Lato/Lato-Regular.ttf'
 
 # overworld
 OW_FONT_SIZE = 30
-OW_FONT_COLOUR = 'black'
-OW_PRIMARY_COLOUR = 'gray10'
+OW_FONT_COLOUR = 'gray10'
+OW_PRIMARY_COLOUR = 'gray30'
 OW_SECONDARY_COLOUR = 'gray50'
 
 # user interface
