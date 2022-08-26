@@ -14,11 +14,11 @@ class SettingsScreen:
         self.create_title = create_title
 
         # text and buttons setup
-        self.music_text = Text('Music',(WIDTH/2-300,HEIGHT/2-200))
+        self.music_text = Text('Music',(WIDTH/2-300,HEIGHT/2-200),'big')
         self.music_slider = Slider(mixer.music,(WIDTH/2-100,HEIGHT/2-190))
-        self.volume_text = Text('Volume',(WIDTH/2-300,HEIGHT/2-150))
+        self.volume_text = Text('Volume',(WIDTH/2-300,HEIGHT/2-150),'big')
         self.volume_slider = Slider(sounds,(WIDTH/2-100,HEIGHT/2-140))
-        self.controls_text = Text('Controls',(WIDTH/2-300,HEIGHT/2-100))
+        self.controls_text = Text('Controls',(WIDTH/2-300,HEIGHT/2-100),'big')
         self.create_controls()
         self.back_button = Button('BACK',(10,5),self.create_title)
 
@@ -30,7 +30,7 @@ class SettingsScreen:
             key = CONTROLS[i][0]
             act = CONTROLS[i][1]
             self.keys.append(Button(key,(WIDTH/2-100,HEIGHT/2-100+(i*50)),self.blank))
-            self.actions.append(Text(act,(WIDTH/2+150,HEIGHT/2-100+(i*50))))
+            self.actions.append(Text(act,(WIDTH/2+150,HEIGHT/2-100+(i*50)),'big'))
 
     def blank(self):
         # button function placeholder

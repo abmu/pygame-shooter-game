@@ -5,16 +5,13 @@ from weapon import Weapon
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites,visible_sprites,create_bullet,create_pause,sounds):
+    def __init__(self,pos,groups,obstacle_sprites,visible_sprites,create_bullet,sounds):
         # player setup
         super().__init__(groups)
         self.image = pygame.image.load('graphics/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
         self.start_pos = pos
         self.draw_priority = 4
-
-        self.create_pause = create_pause
-        self.pause_pressed = False
 
         # movement
         self.direction = pygame.math.Vector2()
@@ -33,8 +30,8 @@ class Player(pygame.sprite.Sprite):
         self.hit_time = None
 
         # stats
-        self.min_speed = 4
-        self.max_speed = 6
+        self.min_speed = 5
+        self.max_speed = 7
         self.speed = self.min_speed
         self.max_health = 100
         self.health = self.max_health
@@ -87,14 +84,6 @@ class Player(pygame.sprite.Sprite):
                 # begin attack cooldown
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
-
-        # open pause menu
-        if keys[pygame.K_ESCAPE]:
-            self.pause_pressed = True
-        else:
-            if self.pause_pressed:
-                self.create_pause()
-                self.pause_pressed = False
 
     def move(self,speed):
         # normalize direction vector to ensure it is a unit vector

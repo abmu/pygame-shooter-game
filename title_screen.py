@@ -14,8 +14,8 @@ class TitleScreen:
 
         # title, text and buttons setup
         self.title_setup()
-        self.name_text = Text('Name: ',(WIDTH/2+50,HEIGHT/2-OW_FONT_SIZE*3+10))
-        self.points_text = Text('Total Points: ',(WIDTH/2+50,HEIGHT/2-OW_FONT_SIZE*2+20))
+        self.name_text = Text('Name: ',(WIDTH/2+50,HEIGHT/2-OW_FONT_SIZE*3+10),'big')
+        self.points_text = Text('Total Points: ',(WIDTH/2+50,HEIGHT/2-OW_FONT_SIZE*2+20),'big')
         self.play_button = Button('PLAY',(WIDTH/2+50,HEIGHT/2+10),self.create_level)
         self.settings_button = Button('SETTINGS',(WIDTH/2+50,HEIGHT/2+OW_FONT_SIZE+20),self.create_settings)
         self.quit_button = Button('QUIT',(10,5),self.quit)

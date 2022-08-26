@@ -1,5 +1,6 @@
 import pygame
 from settings import *
+from text import Text
 
 
 class Slider:
@@ -14,7 +15,7 @@ class Slider:
         self.pos = pos
         self.slider_rect = pygame.Rect(self.pos,(450,15))
 
-        self.volume = round(sound.get_volume(),1)
+        self.volume = sound.get_volume()
 
     def draw_slider(self):
         # draw background bar
@@ -24,6 +25,10 @@ class Slider:
         self.current_rect = self.slider_rect.copy()
         self.current_rect.width = self.slider_rect.width * self.volume
         pygame.draw.rect(self.screen,self.colour,self.current_rect)
+
+    def draw_text(self):
+        self.text = Text(str(round(self.volume*100)),(self.pos[0]+500,self.pos[1]-10),'big')
+        self.text.display()
 
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -47,10 +52,11 @@ class Slider:
         ratio = bar_pos_clicked / self.slider_rect.width
 
         # set volume to the ratio of the pos clicked on the bar and total width of bar
-        self.volume = round(ratio,1)
+        self.volume = round(ratio,2)
         self.sound.set_volume(self.volume)
 
     def display(self):
-        # update and draw slider
+        # update and draw slider and text
         self.draw_slider()
+        self.draw_text()
         self.check_click()

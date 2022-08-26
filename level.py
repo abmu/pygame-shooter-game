@@ -1,6 +1,8 @@
 import pygame
 from settings import *
+from pygame import mixer
 from tile import Tile
+from floor import Floor
 from coin import Coin
 from player import Player
 from bullet import Bullet
@@ -23,13 +25,16 @@ class Level:
         self.obstacle_sprites = pygame.sprite.Group()
         self.create_map()
 
-        # user interface
-        self.ui = UI()
-        self.timer = Timer()
-        self.pause_menu = PauseMenu()
+        # pause
+        self.pause_pressed = False
 
         self.create_overworld = create_overworld
         self.status = 'play'
+
+        # user interface
+        self.ui = UI()
+        self.timer = Timer()
+        self.pause_menu = PauseMenu(self.create_overworld)
 
     def create_map(self):
         enemy_pos = {}
@@ -42,11 +47,13 @@ class Level:
                 if col == 'x':
                     Tile((x,y),[self.visible_sprites,self.obstacle_sprites])
                 elif col == 'P':
-                    self.player = Player((x,y),[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_bullet,self.create_pause,self.sounds)
+                    self.player = Player((x,y),[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_bullet,self.sounds)
                 elif col == 'E':
                     enemy_pos[(x,y)] = False # ie. (x,y) position is not currently occupied
                 elif col == 'C':
                     coin_pos[(x,y)] = False
+
+        Floor((0,0),[self.visible_sprites],(x,y))
 
         # the number of coins and enemies should be less than the number of possible positions
         # create enemy sprites in random enemy positions
@@ -61,10 +68,16 @@ class Level:
         Bullet(self.player.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites.get_middle_pos(),pygame.mouse.get_pos(),add_points)
 
     def create_pause(self):
+        # pause game if the status is 'play'
         if self.status == 'play':
             self.status = 'pause'
+            self.timer.pause()
+            mixer.music.pause()
+        # unpause game if the status is 'pause'
         else:
             self.status = 'play'
+            self.timer.unpause()
+            mixer.music.unpause()
 
     def is_finish(self):
         # check if the timer is finished
@@ -72,17 +85,29 @@ class Level:
             return True
         return False
 
+    def input(self):
+        keys = pygame.key.get_pressed()
+
+        # open pause menu
+        if keys[pygame.K_ESCAPE]:
+            self.pause_pressed = True
+        else:
+            if self.pause_pressed:
+                self.create_pause()
+                self.pause_pressed = False
+
     def run(self):
         # update and draw the level map and ui
         self.visible_sprites.draw(self.player)
-        self.visible_sprites.update()
-        self.visible_sprites.enemy_update(self.player)
         self.ui.display(self.player,self.timer)
 
+        self.input()
         # draw pause screen if paused
-        # the game is intended to be multiplayer so pausing will not stop enemies and other players
         if self.status == 'pause':
             self.pause_menu.display()
+        else:
+            self.visible_sprites.update()
+            self.visible_sprites.enemy_update(self.player)
 
         # go to overworld if game is finished
         if self.is_finish():
