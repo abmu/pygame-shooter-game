@@ -10,14 +10,15 @@ from enemy import Enemy
 from timer import Timer
 from ui import UI
 from pause_menu import PauseMenu
+from game_over import GameOver
 
 
 class Level:
     def __init__(self,create_overworld,sounds):
-        # get display surface
+        # general setup
         self.screen = pygame.display.get_surface()
-
-        # sound setup
+        self.create_overworld = create_overworld
+        self.status = 'play'
         self.sounds = sounds
 
         # sprite group and sprite setup
@@ -25,16 +26,12 @@ class Level:
         self.obstacle_sprites = pygame.sprite.Group()
         self.create_map()
 
-        # pause
-        self.pause_pressed = False
-
-        self.create_overworld = create_overworld
-        self.status = 'play'
-
         # user interface
         self.ui = UI()
-        self.timer = Timer()
-        self.pause_menu = PauseMenu(self.create_overworld)
+        self.timer = Timer(30)
+        self.pause_menu = PauseMenu(self.create_overworld,self.player.stats)
+        self.pause_pressed = False
+        self.game_over = GameOver(self.create_overworld,self.player.stats)
 
     def create_map(self):
         enemy_pos = {}
@@ -64,8 +61,19 @@ class Level:
         for count in range(3):
             Coin(coin_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.sounds)
 
-    def create_bullet(self,add_points):
-        Bullet(self.player.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites.get_middle_pos(),pygame.mouse.get_pos(),add_points)
+    def create_bullet(self,add_points,increment_stat):
+        Bullet(self.player.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites,add_points,increment_stat)
+
+    def input(self):
+        keys = pygame.key.get_pressed()
+
+        # open pause menu
+        if keys[pygame.K_ESCAPE]:
+            self.pause_pressed = True
+        else:
+            if self.pause_pressed:
+                self.create_pause()
+                self.pause_pressed = False
 
     def create_pause(self):
         # pause game if the status is 'play'
@@ -79,39 +87,40 @@ class Level:
             self.timer.unpause()
             mixer.music.unpause()
 
-    def is_finish(self):
-        # check if the timer is finished
-        if self.timer.get_timer_time() < '0:00': 
-            return True
-        return False
+    def create_over(self):
+        # open the details.csv file
+        with open('details.csv','a+') as f:
+            pass
 
-    def input(self):
-        keys = pygame.key.get_pressed()
-
-        # open pause menu
-        if keys[pygame.K_ESCAPE]:
-            self.pause_pressed = True
-        else:
-            if self.pause_pressed:
-                self.create_pause()
-                self.pause_pressed = False
+        self.status = 'over'
+        self.timer.pause()
+        mixer.music.pause()
 
     def run(self):
         # update and draw the level map and ui
         self.visible_sprites.draw(self.player)
         self.ui.display(self.player,self.timer)
 
-        self.input()
-        # draw pause screen if paused
-        if self.status == 'pause':
-            self.pause_menu.display()
+        # play game ie. let sprites move unless the game is paused or is over
+        if self.status == 'over':
+            # game over
+            self.game_over.display()
         else:
-            self.visible_sprites.update()
-            self.visible_sprites.enemy_update(self.player)
+            # allow player to pause/unpause if the game is not over
+            self.input()
 
-        # go to overworld if game is finished
-        if self.is_finish():
-            self.create_overworld()
+            if self.status == 'play':
+                # game playing
+                self.visible_sprites.update()
+                self.visible_sprites.enemy_update(self.player)
+
+                # check if the game timer has finished
+                if self.timer.is_finish():
+                    self.create_over()
+            elif self.status == 'pause':
+                # game paused
+                self.pause_menu.display()
+
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):

@@ -10,7 +10,6 @@ class SettingsScreen:
     def __init__(self,create_title,sounds):
         # general setup
         self.screen = pygame.display.get_surface()
-        self.font = pygame.font.Font(FONT,OW_FONT_SIZE)
         self.create_title = create_title
 
         # text and buttons setup

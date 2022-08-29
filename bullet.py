@@ -3,11 +3,13 @@ from settings import *
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites,middle_pos,mouse_pos,add_points):
+    def __init__(self,pos,groups,obstacle_sprites,visible_sprites,add_points,increment_stat):
         # bullet setup
         super().__init__(groups)
         orig_image = pygame.image.load('graphics/bullet.png').convert_alpha()
         orig_rect = orig_image.get_rect(topleft = pos)
+        middle_pos = visible_sprites.get_middle_pos()
+        mouse_pos = pygame.mouse.get_pos()
         self.set_direction(middle_pos,mouse_pos)
         self.rotate(orig_image,orig_rect)
         self.pos_x = self.rect.x
@@ -17,6 +19,7 @@ class Bullet(pygame.sprite.Sprite):
         # movement
         self.obstacle_sprites = obstacle_sprites
         self.add_points = add_points
+        self.increment_stat = increment_stat
 
         # stats
         self.speed = 10
@@ -59,6 +62,7 @@ class Bullet(pygame.sprite.Sprite):
                     # if the enemy sprite dies and respawns, ie. their health regenerates, award the player a certain amount of points
                     if sprite.health == sprite.max_health:
                         self.add_points(sprite.get_worth())
+                        self.increment_stat('Kills')
                     self.kill()
 
     def update(self):

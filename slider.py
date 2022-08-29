@@ -27,8 +27,8 @@ class Slider:
         pygame.draw.rect(self.screen,self.colour,self.current_rect)
 
     def draw_text(self):
-        self.text = Text(str(round(self.volume*100)),(self.pos[0]+500,self.pos[1]-10),'big')
-        self.text.display()
+        text = Text(str(round(self.volume*100)),(self.pos[0]+500,self.pos[1]-10),'big')
+        text.display()
 
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()

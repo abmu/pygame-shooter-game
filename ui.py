@@ -1,5 +1,6 @@
 import pygame
 from settings import *
+from text import Text
 
 
 class UI:
@@ -29,7 +30,7 @@ class UI:
 
     def draw_points_text(self,player):
         # draw points text
-        text_surf = self.font.render('POINTS: ' + str(int(player.points)),False,UI_FONT_COLOUR)
+        text_surf = self.font.render(f'POINTS: {player.stats["Points"]}',False,UI_FONT_COLOUR)
         text_rect = text_surf.get_rect(topleft = (20,40))
         pygame.draw.rect(self.screen,UI_PRIMARY_COLOUR,text_rect.inflate(20,0))
         self.screen.blit(text_surf,text_rect)

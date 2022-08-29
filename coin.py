@@ -52,6 +52,7 @@ class Coin(pygame.sprite.Sprite):
                     if not self.hit:
                         self.image = pygame.image.load('graphics/coin-2.png').convert_alpha()
                         sprite.add_points(self.worth)
+                        sprite.increment_stat('Coins')
 
                         # begin hit animation cooldown
                         self.hit = True

@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
         # movement
         self.direction = pygame.math.Vector2()
         self.obstacle_sprites = obstacle_sprites
+        self.visible_sprites = visible_sprites
 
         # shooting
         self.pressed = False
@@ -35,9 +36,9 @@ class Player(pygame.sprite.Sprite):
         self.speed = self.min_speed
         self.max_health = 100
         self.health = self.max_health
-        self.points = 0
+        self.stats = {'Points':0,'Kills':0,'Deaths':0,'Coins':0}
 
-        self.weapon = Weapon(self.rect,[visible_sprites],visible_sprites.get_middle_pos())
+        self.weapon = Weapon(self.rect,[self.visible_sprites],self.visible_sprites)
 
         # sound setup
         self.sounds = sounds
@@ -77,7 +78,7 @@ class Player(pygame.sprite.Sprite):
             self.pressed = True
         else:
             if self.pressed:
-                self.create_bullet(self.add_points)
+                self.create_bullet(self.add_points,self.increment_stat)
                 self.sounds.play('shoot_ping')
                 self.pressed = False
 
@@ -144,6 +145,7 @@ class Player(pygame.sprite.Sprite):
                 self.health = self.max_health
                 # deduct points if the player dies
                 self.add_points(-1000)
+                self.increment_stat('Deaths')
 
             # begin hit cooldown
             self.hit = True
@@ -154,10 +156,13 @@ class Player(pygame.sprite.Sprite):
         return (self.health,self.max_health)
 
     def add_points(self,points):
-        self.points += points
-        if self.points <= 0:
+        self.stats['Points'] += points
+        if self.stats['Points'] <= 0:
             # set the points to 0 if their points goes below 0
-            self.points = 0
+            self.stats['Points'] = 0
+
+    def increment_stat(self,stat):
+        self.stats[stat] += 1
 
     def update(self):
         # update player

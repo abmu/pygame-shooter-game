@@ -1,5 +1,6 @@
 import pygame
 import sys
+import csv
 from settings import *
 from text import Text
 from button import Button
@@ -14,8 +15,7 @@ class TitleScreen:
 
         # title, text and buttons setup
         self.title_setup()
-        self.name_text = Text('Name: ',(WIDTH/2+50,HEIGHT/2-OW_FONT_SIZE*3+10),'big')
-        self.points_text = Text('Total Points: ',(WIDTH/2+50,HEIGHT/2-OW_FONT_SIZE*2+20),'big')
+        self.name_text = Text(f'Name: {username}',(WIDTH/2+50,HEIGHT/2-OW_FONT_SIZE*3+10),'big')
         self.play_button = Button('PLAY',(WIDTH/2+50,HEIGHT/2+10),self.create_level)
         self.settings_button = Button('SETTINGS',(WIDTH/2+50,HEIGHT/2+OW_FONT_SIZE+20),self.create_settings)
         self.quit_button = Button('QUIT',(10,5),self.quit)
@@ -29,6 +29,29 @@ class TitleScreen:
         self.title_image = pygame.transform.scale(image, new_size)
         self.title_rect = self.title_image.get_rect(topleft = (WIDTH/2-400,HEIGHT/2-(new_size[1]/2)))
 
+    def draw_points_text(self):
+        found = False
+        points = 0
+        # open the details.csv file
+        with open('details.csv','a+') as f:
+            f.seek(0)
+            reader = csv.reader(f)
+            # iterate over each line in file
+            for line in reader:
+                # if the file is not empty the program will enter this for loop
+                if line[0] == username:
+                    found = True
+                    points = line[1]
+                    break
+
+            # add new user to file if it doesn't already exist
+            if not found:
+                writer = csv.writer(f)
+                writer.writerow([username,points])
+
+        text = Text(f'Total Points: {points}',(WIDTH/2+50,HEIGHT/2-OW_FONT_SIZE*2+20),'big')
+        text.display()
+
     def quit(self):
         pygame.quit()
         sys.exit()
@@ -37,7 +60,7 @@ class TitleScreen:
         # update and draw the title screen
         self.screen.blit(self.title_image,self.title_rect)
         self.name_text.display()
-        self.points_text.display()
+        self.draw_points_text()
         self.play_button.display()
         self.settings_button.display()
         self.quit_button.display()

@@ -26,7 +26,6 @@ class Game:
     def create_overworld(self):
         self.overworld = Overworld(self.create_level,self.sounds)
         self.status = 'overworld'
-        mixer.music.stop()
 
     def create_level(self):
         self.level = Level(self.create_overworld,self.sounds)

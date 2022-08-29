@@ -3,11 +3,11 @@ from settings import *
 
 
 class Weapon(pygame.sprite.Sprite):
-    def __init__(self,player_rect,groups,middle_pos):
+    def __init__(self,player_rect,groups,visible_sprites):
         # weapon setup
         super().__init__(groups)
         self.player_rect = player_rect
-        self.middle_pos = middle_pos
+        self.middle_pos = visible_sprites.get_middle_pos()
         self.orig_image = pygame.image.load('graphics/pistol.png').convert_alpha()
         self.update()
         self.draw_priority = 5

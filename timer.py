@@ -2,9 +2,9 @@ import time
 
 
 class Timer:
-    def __init__(self):
+    def __init__(self,seconds):
         # timer setup
-        self.total_time = 150 # seconds
+        self.total_time = seconds # seconds
         self.start_time = time.time()
 
         # pause setup
@@ -36,4 +36,10 @@ class Timer:
         seconds = self.total_time - self.get_time_elapsed()
         m, s = divmod(seconds,60)
         return f'{m}:{s:02}' # ensure seconds is given to 2 digits, adding a leading zero if necessary
+
+    def is_finish(self):
+        # check if the timer is finished
+        if self.get_time_elapsed() >= self.total_time:
+            return True
+        return False
 
