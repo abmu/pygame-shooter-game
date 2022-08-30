@@ -1,4 +1,5 @@
 import pygame
+import csv
 from settings import *
 from pygame import mixer
 from tile import Tile
@@ -28,7 +29,7 @@ class Level:
 
         # user interface
         self.ui = UI()
-        self.timer = Timer(30)
+        self.timer = Timer(10)
         self.pause_menu = PauseMenu(self.create_overworld,self.player.stats)
         self.pause_pressed = False
         self.game_over = GameOver(self.create_overworld,self.player.stats)
@@ -88,9 +89,21 @@ class Level:
             mixer.music.unpause()
 
     def create_over(self):
-        # open the details.csv file
-        with open('details.csv','a+') as f:
-            pass
+        # read the old total points from the details.csv file
+        with open('details.csv','r') as f:
+            reader = csv.reader(f)
+            lines = list(reader)
+
+        # update the points for the user that was just playing
+        for line in lines:
+            if line[0] == username:
+                line[1] = int(line[1]) + self.player.stats['Points']
+                break
+
+        # write the updated total points to the file
+        with open ('details.csv','w') as f:
+            writer = csv.writer(f)
+            writer.writerows(lines)
 
         self.status = 'over'
         self.timer.pause()
