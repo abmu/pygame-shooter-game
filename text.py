@@ -6,12 +6,12 @@ class Text:
     def __init__(self,text,pos):
         # general setup
         self.screen = pygame.display.get_surface()
-        self.font = pygame.font.Font(FONT_2,OW_FONT_SIZE)
+        self.font = pygame.font.Font(FONT_1,FONT_SIZE_1)
 
         # text setup
         self.text = text
         self.pos = pos
-        self.text_surf = self.font.render(self.text,False,OW_FONT_COLOUR)
+        self.text_surf = self.font.render(self.text,False,FONT_COLOUR_1)
         self.text_rect = self.text_surf.get_rect(topleft = self.pos)
 
     def get_size(self):

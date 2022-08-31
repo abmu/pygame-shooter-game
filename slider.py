@@ -11,7 +11,7 @@ class Slider:
         self.sound = sound
 
         # bar setup
-        self.colour = OW_FONT_COLOUR
+        self.colour = COLOUR_2
         self.pos = pos
         self.slider_rect = pygame.Rect(self.pos,(500,15))
 
@@ -19,7 +19,7 @@ class Slider:
 
     def draw_slider(self):
         # draw background bar
-        pygame.draw.rect(self.screen,OW_SECONDARY_COLOUR,self.slider_rect)
+        pygame.draw.rect(self.screen,COLOUR_4,self.slider_rect)
 
         # draw current bar
         self.current_rect = self.slider_rect.copy()
@@ -34,7 +34,7 @@ class Slider:
         mouse_pos = pygame.mouse.get_pos()
         # check if the mouse is touching the slider
         if self.slider_rect.collidepoint(mouse_pos) or self.current_rect.collidepoint(mouse_pos):
-            self.colour = OW_PRIMARY_COLOUR
+            self.colour = COLOUR_1
             # check if the left mouse button has been pressed
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
@@ -43,7 +43,7 @@ class Slider:
                     self.click_func(mouse_pos[0])
                     self.pressed = False
         else:
-            self.colour = OW_FONT_COLOUR
+            self.colour = COLOUR_2
 
     def click_func(self,mouse_pos):
         # calculate new volume from the position on the slider which was clicked

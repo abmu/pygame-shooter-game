@@ -30,16 +30,16 @@ class TextBox:
         if self.flash:
             size = self.input_text.get_size()
             self.line = pygame.Rect((self.pos[0]+size[0]+5,self.pos[1]+2),(2,30))
-            pygame.draw.rect(self.screen,OW_SECONDARY_COLOUR,self.line)
+            pygame.draw.rect(self.screen,COLOUR_4,self.line)
 
     def draw_text_box(self):
         # draw text box outline
         # change colour if the box has been selected
         if self.active:
-            colour = OW_SECONDARY_COLOUR
+            colour = COLOUR_4
             self.draw_line()
         else:
-            colour = OW_FONT_COLOUR
+            colour = COLOUR_2
 
         self.rect = pygame.Rect(self.pos,(300,35))
         pygame.draw.rect(self.screen,colour,self.rect,1)

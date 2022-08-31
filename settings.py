@@ -75,20 +75,20 @@ MAP_ARRAY = [
 ]
 
 # defualt font across whole game
-FONT = 'graphics/fonts/Lato/Lato-Black.ttf'
-FONT_2 = 'graphics/fonts/Lato/Lato-Regular.ttf'
+FONT_1 = 'graphics/fonts/Lato/Lato-Regular.ttf'
+FONT_2 = 'graphics/fonts/Lato/Lato-Black.ttf'
 
-# overworld
-OW_FONT_SIZE = 30
-OW_FONT_COLOUR = 'gray10'
-OW_PRIMARY_COLOUR = 'gray30'
-OW_SECONDARY_COLOUR = 'gray50'
+# font sizes
+FONT_SIZE_1 = 30
+FONT_SIZE_2 = 20
 
-# user interface
-BAR_HEIGHT = 20
-BAR_WIDTH = 200
-UI_FONT_SIZE = 20
-UI_FONT_COLOUR = 'white'
-UI_PRIMARY_COLOUR = 'gray10'
-UI_SECONDARY_COLOUR = 'gray3'
-UI_HEALTH_COLOUR = 'red'
+# font colours
+FONT_COLOUR_1 = 'gray10'
+FONT_COLOUR_2 = 'gray30'
+FONT_COLOUR_3 = 'white'
+
+# ui colours
+COLOUR_1 = 'gray30'
+COLOUR_2 = 'gray10'
+COLOUR_3 = 'gray3'
+COLOUR_4 = 'gray50'

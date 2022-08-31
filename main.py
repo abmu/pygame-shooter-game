@@ -19,6 +19,7 @@ class Game:
 
         # sound setup
         mixer.music.load('audio/8-bit-Monsters.mp3')
+        mixer.music.set_volume(1) # initialise music volume to 1 (pygame sets it to ~0.99)
         self.sounds = Sounds()
 
         # default game screen
