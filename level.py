@@ -14,12 +14,13 @@ from game_over import GameOver
 
 
 class Level:
-    def __init__(self,create_overworld,sounds):
+    def __init__(self,create_overworld,sounds,username):
         # general setup
         self.screen = pygame.display.get_surface()
         self.create_overworld = create_overworld
         self.status = 'play'
         self.sounds = sounds
+        self.username = username
 
         # sprite group and sprite setup
         self.visible_sprites = CameraGroup()
@@ -28,7 +29,7 @@ class Level:
 
         # user interface
         self.ui = UI()
-        self.timer = Timer(10)
+        self.timer = Timer(60)
         self.pause_pressed = False
 
     def create_map(self):
@@ -76,7 +77,7 @@ class Level:
     def create_pause(self):
         # pause game if the status is 'play'
         if self.status == 'play':
-            self.pause_menu = PauseMenu(self.create_overworld,self.player.stats)
+            self.pause_menu = PauseMenu(self.create_overworld,self.player.stats,self.username)
             self.status = 'pause'
             self.timer.pause()
             mixer.music.pause()
@@ -87,7 +88,7 @@ class Level:
             mixer.music.unpause()
 
     def create_over(self):
-        self.game_over = GameOver(self.create_overworld,self.player.stats)
+        self.game_over = GameOver(self.create_overworld,self.player.stats,self.username)
         self.status = 'over'
         self.timer.pause()
         mixer.music.pause()

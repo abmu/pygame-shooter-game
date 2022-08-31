@@ -7,15 +7,16 @@ from button import Button
 
 
 class TitleScreen:
-    def __init__(self,create_level,create_settings):
+    def __init__(self,create_level,create_settings,username):
         # general setup
         self.screen = pygame.display.get_surface()
         self.create_level = create_level
         self.create_settings = create_settings
+        self.username = username
 
         # title, text and buttons setup
         self.title_setup()
-        self.name_text = Text(f'Name: {username}',(WIDTH/2+50,HEIGHT/2-80))
+        self.name_text = Text(f'Name: {self.username}',(WIDTH/2+50,HEIGHT/2-80))
         self.points_text_setup()
         self.play_button = Button('PLAY',(WIDTH/2+50,HEIGHT/2+10),self.create_level)
         self.settings_button = Button('SETTINGS',(WIDTH/2+50,HEIGHT/2+50),self.create_settings)
@@ -40,7 +41,7 @@ class TitleScreen:
             # iterate over each line in file
             for line in reader:
                 # if the file is not empty the program will enter this for loop
-                if line[0] == username:
+                if line[0] == self.username:
                     found = True
                     points = line[1]
                     break
@@ -48,7 +49,7 @@ class TitleScreen:
             # add new user to file if it doesn't already exist
             if not found:
                 writer = csv.writer(f)
-                writer.writerow([username,points])
+                writer.writerow([self.username,points])
 
         self.points_text = Text(f'Total Points: {points}',(WIDTH/2+50,HEIGHT/2-40))
 

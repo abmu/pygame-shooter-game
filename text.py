@@ -14,6 +14,9 @@ class Text:
         self.text_surf = self.font.render(self.text,False,OW_FONT_COLOUR)
         self.text_rect = self.text_surf.get_rect(topleft = self.pos)
 
+    def get_size(self):
+        return self.font.size(self.text)
+
     def display(self):
         # update and draw text
         self.screen.blit(self.text_surf,self.text_rect)

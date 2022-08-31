@@ -2,6 +2,7 @@ import pygame
 import sys
 from pygame import mixer
 from settings import *
+from login import Login
 from overworld import Overworld
 from level import Level
 from sounds import Sounds
@@ -21,20 +22,30 @@ class Game:
         self.sounds = Sounds()
 
         # default game screen
-        self.create_overworld()
+        self.create_login()
+
+    def create_login(self):
+        self.login = Login(self.create_overworld)
+        self.status = 'login'
 
     def create_overworld(self):
-        self.overworld = Overworld(self.create_level,self.sounds)
-        self.status = 'overworld'
+        # check if username is valid
+        username = self.login.get_username()
+        if not username.isspace() and len(username) > 0:
+            self.overworld = Overworld(self.create_level,self.sounds,username)
+            self.status = 'overworld'
 
     def create_level(self):
-        self.level = Level(self.create_overworld,self.sounds)
+        self.level = Level(self.create_overworld,self.sounds,self.login.get_username())
         self.status = 'level'
         mixer.music.play(-1)
 
-    def display_screen(self):
+    def display_screen(self,event_list):
         # display the overworld screen or the level screen depending on what has happened in game
-        if self.status == 'overworld':
+        if self.status == 'login':
+            self.screen.fill('white')
+            self.login.run(event_list)
+        elif self.status == 'overworld':
             self.screen.fill('white')
             self.overworld.run()
         else:
@@ -44,13 +55,14 @@ class Game:
     def run(self):
         # game loop
         while True:
-            for event in pygame.event.get():
+            event_list = pygame.event.get()
+            for event in event_list:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
 
             # update screen
-            self.display_screen()
+            self.display_screen(event_list)
             pygame.display.update()
             self.clock.tick(FPS)
 

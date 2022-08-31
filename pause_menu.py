@@ -5,11 +5,12 @@ from button import Button
 
 
 class PauseMenu:
-    def __init__(self,create_overworld,stats):
+    def __init__(self,create_overworld,stats,username):
         # general setup
         self.screen = pygame.display.get_surface()
         self.create_overworld = create_overworld
         self.stats = stats
+        self.username = username
 
         # text and button setup
         self.pause_setup()
@@ -37,7 +38,7 @@ class PauseMenu:
             num.display()
 
         # draw player name
-        name = Text(f'{username} (You)',(WIDTH/2-180,HEIGHT/2-55))
+        name = Text(f'{self.username} (You)',(WIDTH/2-180,HEIGHT/2-55))
         name.display()
 
         # draw player stats

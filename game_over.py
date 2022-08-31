@@ -6,11 +6,12 @@ from button import Button
 
 
 class GameOver:
-    def __init__(self,create_overworld,stats):
+    def __init__(self,create_overworld,stats,username):
         # general setup
         self.screen = pygame.display.get_surface()
         self.create_overworld = create_overworld
         self.stats = stats
+        self.username = username
         self.update_points()
 
         # text and button setup
@@ -27,7 +28,7 @@ class GameOver:
 
         # update the points for the user that was just playing
         for line in lines:
-            if line[0] == username:
+            if line[0] == self.username:
                 line[1] = int(line[1]) + self.stats['Points']
                 break
 
@@ -51,7 +52,7 @@ class GameOver:
             num.display()
 
         # draw player name
-        name = Text(f'{username} (You)',(WIDTH/2+5,HEIGHT/2-90))
+        name = Text(f'{self.username} (You)',(WIDTH/2+5,HEIGHT/2-90))
         name.display()
 
         # draw player stats
