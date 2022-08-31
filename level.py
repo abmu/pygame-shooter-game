@@ -1,5 +1,4 @@
 import pygame
-import csv
 from settings import *
 from pygame import mixer
 from tile import Tile
@@ -30,9 +29,7 @@ class Level:
         # user interface
         self.ui = UI()
         self.timer = Timer(10)
-        self.pause_menu = PauseMenu(self.create_overworld,self.player.stats)
         self.pause_pressed = False
-        self.game_over = GameOver(self.create_overworld,self.player.stats)
 
     def create_map(self):
         enemy_pos = {}
@@ -79,6 +76,7 @@ class Level:
     def create_pause(self):
         # pause game if the status is 'play'
         if self.status == 'play':
+            self.pause_menu = PauseMenu(self.create_overworld,self.player.stats)
             self.status = 'pause'
             self.timer.pause()
             mixer.music.pause()
@@ -89,38 +87,24 @@ class Level:
             mixer.music.unpause()
 
     def create_over(self):
-        # read the old total points from the details.csv file
-        with open('details.csv','r') as f:
-            reader = csv.reader(f)
-            lines = list(reader)
-
-        # update the points for the user that was just playing
-        for line in lines:
-            if line[0] == username:
-                line[1] = int(line[1]) + self.player.stats['Points']
-                break
-
-        # write the updated total points to the file
-        with open ('details.csv','w') as f:
-            writer = csv.writer(f)
-            writer.writerows(lines)
-
+        self.game_over = GameOver(self.create_overworld,self.player.stats)
         self.status = 'over'
         self.timer.pause()
         mixer.music.pause()
 
     def run(self):
-        # update and draw the level map and ui
-        self.visible_sprites.draw(self.player)
-        self.ui.display(self.player,self.timer)
-
         # play game ie. let sprites move unless the game is paused or is over
         if self.status == 'over':
             # game over
+            self.screen.fill('white')
             self.game_over.display()
         else:
             # allow player to pause/unpause if the game is not over
             self.input()
+
+            # update and draw the level map and ui
+            self.visible_sprites.draw(self.player)
+            self.ui.display(self.player,self.timer)
 
             if self.status == 'play':
                 # game playing

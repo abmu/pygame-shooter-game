@@ -13,7 +13,7 @@ class Slider:
         # bar setup
         self.colour = OW_FONT_COLOUR
         self.pos = pos
-        self.slider_rect = pygame.Rect(self.pos,(450,15))
+        self.slider_rect = pygame.Rect(self.pos,(500,15))
 
         self.volume = sound.get_volume()
 
@@ -27,7 +27,7 @@ class Slider:
         pygame.draw.rect(self.screen,self.colour,self.current_rect)
 
     def draw_text(self):
-        text = Text(str(round(self.volume*100)),(self.pos[0]+500,self.pos[1]-10),'big')
+        text = Text(str(round(self.volume*100)),(self.pos[0]+550,self.pos[1]-10))
         text.display()
 
     def check_click(self):

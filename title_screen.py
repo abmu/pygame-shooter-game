@@ -15,9 +15,10 @@ class TitleScreen:
 
         # title, text and buttons setup
         self.title_setup()
-        self.name_text = Text(f'Name: {username}',(WIDTH/2+50,HEIGHT/2-OW_FONT_SIZE*3+10),'big')
+        self.name_text = Text(f'Name: {username}',(WIDTH/2+50,HEIGHT/2-80))
+        self.points_text_setup()
         self.play_button = Button('PLAY',(WIDTH/2+50,HEIGHT/2+10),self.create_level)
-        self.settings_button = Button('SETTINGS',(WIDTH/2+50,HEIGHT/2+OW_FONT_SIZE+20),self.create_settings)
+        self.settings_button = Button('SETTINGS',(WIDTH/2+50,HEIGHT/2+50),self.create_settings)
         self.quit_button = Button('QUIT',(10,5),self.quit)
 
     def title_setup(self):
@@ -29,7 +30,7 @@ class TitleScreen:
         self.title_image = pygame.transform.scale(image, new_size)
         self.title_rect = self.title_image.get_rect(topleft = (WIDTH/2-400,HEIGHT/2-(new_size[1]/2)))
 
-    def draw_points_text(self):
+    def points_text_setup(self):
         found = False
         points = 0
         # open the details.csv file
@@ -49,8 +50,7 @@ class TitleScreen:
                 writer = csv.writer(f)
                 writer.writerow([username,points])
 
-        text = Text(f'Total Points: {points}',(WIDTH/2+50,HEIGHT/2-OW_FONT_SIZE*2+20),'big')
-        text.display()
+        self.points_text = Text(f'Total Points: {points}',(WIDTH/2+50,HEIGHT/2-40))
 
     def quit(self):
         pygame.quit()
@@ -60,7 +60,7 @@ class TitleScreen:
         # update and draw the title screen
         self.screen.blit(self.title_image,self.title_rect)
         self.name_text.display()
-        self.draw_points_text()
+        self.points_text.display()
         self.play_button.display()
         self.settings_button.display()
         self.quit_button.display()

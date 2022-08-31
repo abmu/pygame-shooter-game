@@ -3,13 +3,10 @@ from settings import *
 
 
 class Text:
-    def __init__(self,text,pos,size):
+    def __init__(self,text,pos):
         # general setup
         self.screen = pygame.display.get_surface()
-        if size == 'big':
-            self.font = pygame.font.Font(FONT_2,OW_FONT_SIZE)
-        else:
-            self.font = pygame.font.Font(FONT,UI_FONT_SIZE)
+        self.font = pygame.font.Font(FONT_2,OW_FONT_SIZE)
 
         # text setup
         self.text = text
