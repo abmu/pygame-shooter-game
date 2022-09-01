@@ -26,7 +26,7 @@ class UI:
         pygame.draw.rect(self.screen,'red',current_rect)
         
         # draw border bar
-        pygame.draw.rect(self.screen,COLOUR_2,self.health_rect,1)
+        pygame.draw.rect(self.screen,COLOUR_1,self.health_rect,2)
 
     def draw_points_text(self,player):
         # draw points text

@@ -2,9 +2,19 @@
 WIDTH = 1280
 HEIGHT = 720
 FPS = 60
-TILE_SIZE = 64
+GAME_LENGTH = 60
 
+TITLE = 'Shooter Game'
 ICON = 'graphics/icon.png'
+MUSIC = 'audio/8-bit-Monsters.mp3'
+
+TILE_SIZE = 64
+PLAYER_SIZE = 48
+ENEMY_SIZE = 40
+COIN_SIZE = 40
+WEAPON_X = 32
+WEAPON_Y = 16
+BULLET_SIZE = WEAPON_Y
 
 CONTROLS = [
 ['W / UP','Move up'],

@@ -6,7 +6,8 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self,pos,groups,obstacle_sprites,visible_sprites,add_points,increment_stat):
         # bullet setup
         super().__init__(groups)
-        orig_image = pygame.image.load('graphics/bullet.png').convert_alpha()
+        orig_image = pygame.Surface((BULLET_SIZE,BULLET_SIZE)).convert_alpha()
+        orig_image.fill('red')
         orig_rect = orig_image.get_rect(topleft = pos)
         middle_pos = visible_sprites.get_middle_pos()
         mouse_pos = pygame.mouse.get_pos()

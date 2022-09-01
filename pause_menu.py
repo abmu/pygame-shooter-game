@@ -23,8 +23,11 @@ class PauseMenu:
         self.pause_rect = self.pause_image.get_rect(topleft = (WIDTH/2-size[0]/2,HEIGHT/2-250))
 
     def draw_rect(self):
-        # draw background rectangle
-        pygame.draw.rect(self.screen,'white',(WIDTH/2-350,HEIGHT/2-325,700,650))
+        # draw transparent background rectangle
+        rect = pygame.Surface((700,650))
+        rect.set_alpha(240)
+        rect.fill('white')
+        self.screen.blit(rect,(WIDTH/2-350,HEIGHT/2-325))
 
     def draw_points_text(self):
         # draw points earned text

@@ -29,7 +29,7 @@ class Level:
 
         # user interface
         self.ui = UI()
-        self.timer = Timer(60)
+        self.timer = Timer(GAME_LENGTH)
         self.pause_pressed = False
 
     def create_map(self):

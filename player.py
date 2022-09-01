@@ -1,4 +1,5 @@
 import pygame
+import pygame.gfxdraw
 from pygame import mixer
 from settings import *
 from weapon import Weapon
@@ -8,10 +9,21 @@ class Player(pygame.sprite.Sprite):
     def __init__(self,pos,groups,obstacle_sprites,visible_sprites,create_bullet,sounds):
         # player setup
         super().__init__(groups)
-        self.image = pygame.image.load('graphics/player.png').convert_alpha()
+        
+        # setup default player image
+        s = PLAYER_SIZE
+        self.image_1 = pygame.Surface((s,s),pygame.SRCALPHA).convert_alpha()
+        pygame.gfxdraw.aacircle(self.image_1,s//2,s//2,s//2-1,(255,0,0)) # red1 colour
+        pygame.gfxdraw.filled_circle(self.image_1,s//2,s//2,s//2-1,(255,0,0))
+        # setup player hit image image
+        self.image_2 = pygame.Surface((s,s),pygame.SRCALPHA).convert_alpha()
+        pygame.gfxdraw.aacircle(self.image_2,s//2,s//2,s//2-1,(139,0,0)) # red4 colour
+        pygame.gfxdraw.filled_circle(self.image_2,s//2,s//2,s//2-1,(139,0,0))
+
+        self.image = self.image_1
         self.rect = self.image.get_rect(topleft = pos)
         self.start_pos = pos
-        self.draw_priority = 4
+        self.draw_priority = 3
 
         # movement
         self.direction = pygame.math.Vector2()
@@ -128,19 +140,19 @@ class Player(pygame.sprite.Sprite):
         if self.hit:
             if current_time - self.hit_time >= self.hit_cooldown:
                 self.hit = False
-                self.image = pygame.image.load('graphics/player.png').convert_alpha()
+                self.image = self.image_1
 
     def take_damage(self,power):
         if not self.hit:
             # load hit image
-            self.image = pygame.image.load('graphics/player-2.png').convert_alpha()
+            self.image = self.image_2
 
             # make the player take damage
             self.health -= power
             if self.health <= 0:
                 # make the player respawn once they die
                 self.hit = False
-                self.image = pygame.image.load('graphics/player.png').convert_alpha()
+                self.image = self.image_1
                 self.rect.topleft = self.start_pos
                 self.health = self.max_health
                 # deduct points if the player dies

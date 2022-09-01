@@ -11,9 +11,13 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__(groups)
         self.spawn_positions = spawn_positions
         self.last_pos = None
-        self.image = pygame.image.load('graphics/enemy.png').convert_alpha()
+        self.image_1 = pygame.Surface((ENEMY_SIZE,ENEMY_SIZE)).convert_alpha()
+        self.image_1.fill('green1')
+        self.image_2 = pygame.Surface((ENEMY_SIZE,ENEMY_SIZE)).convert_alpha()
+        self.image_2.fill('green4')
+        self.image = self.image_1
         self.rect = self.image.get_rect(topleft = self.get_spawn_pos())
-        self.draw_priority = 1
+        self.draw_priority = 2
 
         # movement
         self.direction = pygame.math.Vector2()
@@ -120,19 +124,19 @@ class Enemy(pygame.sprite.Sprite):
         if self.hit:
             if current_time - self.hit_time >= self.hit_cooldown:
                 self.hit = False
-                self.image = pygame.image.load('graphics/enemy.png').convert_alpha()
+                self.image = self.image_1
 
     def take_damage(self,power):
         if not self.hit:
             # load hit image
-            self.image = pygame.image.load('graphics/enemy-2.png').convert_alpha()
+            self.image = self.image_2
 
             # make the enemy take damage
             self.health -= power
             if self.health <= 0:
                 # make the enemy respawn once they die
                 self.hit = False
-                self.image = pygame.image.load('graphics/enemy.png').convert_alpha()
+                self.image = self.image_1
                 self.rect.topleft = self.get_spawn_pos()
                 self.health = self.max_health
 

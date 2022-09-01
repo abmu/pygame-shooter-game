@@ -12,13 +12,13 @@ class Game:
         # pygame and screen setup
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH,HEIGHT))
-        pygame.display.set_caption('Shooter Game')
+        pygame.display.set_caption(TITLE)
         icon = pygame.image.load(ICON)
         pygame.display.set_icon(icon)
         self.clock = pygame.time.Clock()
 
         # sound setup
-        mixer.music.load('audio/8-bit-Monsters.mp3')
+        mixer.music.load(MUSIC)
         mixer.music.set_volume(1) # initialise music volume to 1 (pygame sets it to ~0.99)
         self.sounds = Sounds()
 

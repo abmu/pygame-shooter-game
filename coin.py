@@ -10,9 +10,13 @@ class Coin(pygame.sprite.Sprite):
         super().__init__(groups)
         self.spawn_positions = spawn_positions
         self.last_pos = None
-        self.image = pygame.image.load('graphics/coin.png').convert_alpha()
+        self.image_1 = pygame.Surface((COIN_SIZE,COIN_SIZE)).convert_alpha()
+        self.image_1.fill('goldenrod1')
+        self.image_2 = pygame.Surface((COIN_SIZE,COIN_SIZE)).convert_alpha()
+        self.image_2.fill('lightgoldenrod1')
+        self.image = self.image_1
         self.rect = self.image.get_rect(topleft = self.get_spawn_pos())
-        self.draw_priority = 0
+        self.draw_priority = 1
 
         # collision
         self.obstacle_sprites = obstacle_sprites
@@ -50,7 +54,7 @@ class Coin(pygame.sprite.Sprite):
                 if sprite.__class__.__name__ == 'Player':
                     # give points if player touches the coin and make the coin respawn
                     if not self.hit:
-                        self.image = pygame.image.load('graphics/coin-2.png').convert_alpha()
+                        self.image = self.image_2
                         sprite.add_points(self.worth)
                         sprite.increment_stat('Coins')
 
@@ -66,7 +70,7 @@ class Coin(pygame.sprite.Sprite):
         if self.hit:
             if current_time - self.hit_time >= self.hit_cooldown:
                 self.hit = False
-                self.image = pygame.image.load('graphics/coin.png').convert_alpha()
+                self.image = self.image_1
                 # make the coin respawn
                 self.rect.topleft = self.get_spawn_pos()
 
