@@ -9,4 +9,5 @@ class Tile(pygame.sprite.Sprite):
         self.image = pygame.Surface((TILE_SIZE,TILE_SIZE)).convert_alpha()
         self.image.fill('gray76')
         self.rect = self.image.get_rect(topleft = pos)
+        self.drawn_mini = False
         self.draw_priority = 1

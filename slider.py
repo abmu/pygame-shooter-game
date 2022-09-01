@@ -32,24 +32,34 @@ class Slider:
 
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()
-        # check if the mouse is touching the slider
-        if self.slider_rect.collidepoint(mouse_pos) or self.current_rect.collidepoint(mouse_pos):
+        # check if the slider was pressed
+        if self.pressed:
             self.colour = COLOUR_1
-            # check if the left mouse button has been pressed
+            # if the mouse button is still down move the slider
             if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
+                self.click_func(mouse_pos[0])
             else:
-                if self.pressed:
-                    self.click_func(mouse_pos[0])
-                    self.pressed = False
+                self.pressed = False
         else:
-            self.colour = COLOUR_2
+            # check if the mouse is touching the slider
+            if self.slider_rect.collidepoint(mouse_pos) or self.current_rect.collidepoint(mouse_pos):
+                self.colour = COLOUR_1
+                if pygame.mouse.get_pressed()[0]:
+                    self.pressed = True
+            else:
+                self.colour = COLOUR_2
 
     def click_func(self,mouse_pos):
         # calculate new volume from the position on the slider which was clicked
         rect_start_pos = self.pos[0]
         bar_pos_clicked = mouse_pos - rect_start_pos
         ratio = bar_pos_clicked / self.slider_rect.width
+
+        # ensure ratio is between 1 and 0
+        if ratio > 1:
+            ratio = 1
+        elif ratio < 0:
+            ratio = 0
 
         # set volume to the ratio of the pos clicked on the bar and total width of bar
         self.volume = round(ratio,2)

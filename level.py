@@ -28,7 +28,7 @@ class Level:
         self.create_map()
 
         # user interface
-        self.ui = UI()
+        self.ui = UI(self.visible_sprites,self.map_size)
         self.timer = Timer(GAME_LENGTH)
         self.pause_pressed = False
 
@@ -49,15 +49,18 @@ class Level:
                 elif col == 'C':
                     coin_pos[(x,y)] = False
 
-        Floor((0,0),[self.visible_sprites],(x,y))
+        self.map_size = (x,y)
+        Floor((0,0),[self.visible_sprites],self.map_size)
 
         # the number of coins and enemies should be less than the number of possible positions
         # create enemy sprites in random enemy positions
-        for count in range(10):
+        enemy_count = 10
+        for count in range(enemy_count):
             Enemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.sounds)
 
         # create coin sprites in random coin positions
-        for count in range(3):
+        coin_count = 3
+        for count in range(coin_count):
             Coin(coin_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.sounds)
 
     def create_bullet(self,add_points,increment_stat):

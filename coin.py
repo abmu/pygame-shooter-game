@@ -16,6 +16,7 @@ class Coin(pygame.sprite.Sprite):
         self.image_2.fill('lightgoldenrod1')
         self.image = self.image_1
         self.rect = self.image.get_rect(topleft = self.get_spawn_pos())
+        self.drawn_mini = False
         self.draw_priority = 1
 
         # collision

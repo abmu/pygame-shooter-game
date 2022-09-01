@@ -11,7 +11,7 @@ class Text:
         # text setup
         self.text = text
         self.pos = pos
-        self.text_surf = self.font.render(self.text,False,FONT_COLOUR_1)
+        self.text_surf = self.font.render(self.text,True,FONT_COLOUR_1)
         self.text_rect = self.text_surf.get_rect(topleft = self.pos)
 
     def get_size(self):

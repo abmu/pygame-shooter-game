@@ -17,7 +17,7 @@ class Button:
 
     def draw_text(self):
         # draw the button text
-        self.text_surf = self.font.render(self.text,False,self.colour)
+        self.text_surf = self.font.render(self.text,True,self.colour)
         self.text_rect = self.text_surf.get_rect(topleft = self.pos)
         self.screen.blit(self.text_surf,self.text_rect)
 

@@ -30,6 +30,7 @@ class GameOver:
         for line in lines:
             if line[0] == self.username:
                 line[1] = int(line[1]) + self.stats['Points']
+                line[2] = int(line[2]) + 1 # increment games played
                 break
 
         self.total_points = line[1]

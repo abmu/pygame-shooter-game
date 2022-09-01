@@ -9,9 +9,10 @@ ICON = 'graphics/icon.png'
 MUSIC = 'audio/8-bit-Monsters.mp3'
 
 TILE_SIZE = 64
+TILE_MINI_SIZE = 4
 PLAYER_SIZE = 48
 ENEMY_SIZE = 40
-COIN_SIZE = 40
+COIN_SIZE = 32
 WEAPON_X = 32
 WEAPON_Y = 16
 BULLET_SIZE = WEAPON_Y

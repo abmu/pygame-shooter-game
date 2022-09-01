@@ -18,12 +18,12 @@ class HealthBar(pygame.sprite.Sprite):
         ratio = enemy_health[0] / enemy_health[1]
 
         # make new health bar image
-        self.image = pygame.Surface((40*ratio,10)).convert_alpha()
+        self.image = pygame.Surface((ENEMY_SIZE*ratio,10)).convert_alpha()
         self.image.fill('red')
-
+        
     def get_pos(self):
         # make position of the health bar underneath the enemy
-        return (self.enemy_rect.centerx-20,self.enemy_rect.centery+30)
+        return (self.enemy_rect.centerx-ENEMY_SIZE//2,self.enemy_rect.centery+ENEMY_SIZE//2+10)
 
     def update(self):
         # update enemy health bar

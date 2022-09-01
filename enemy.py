@@ -3,6 +3,7 @@ import random
 from pygame import mixer
 from settings import *
 from health_bar import HealthBar
+from level_text import LevelText
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -17,6 +18,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image_2.fill('green4')
         self.image = self.image_1
         self.rect = self.image.get_rect(topleft = self.get_spawn_pos())
+        self.drawn_mini = False
         self.draw_priority = 2
 
         # movement
@@ -35,14 +37,12 @@ class Enemy(pygame.sprite.Sprite):
         self.hit_time = None
 
         # stats
-        self.speed = 3
-        self.max_health = 100
-        self.health = self.max_health
-        self.power = 10
-        self.notice_radius = 500
-        self.worth = 50
+        self.level = 0 # starts at level 1 when incremented
+        self.max_level = 3
+        self.update_stats()
 
         self.health_bar = HealthBar(self.rect,self.get_health,[visible_sprites])
+        self.level_bar = LevelText(self.rect,self.get_level,[visible_sprites])
 
         # sound setup
         self.sounds = sounds
@@ -61,6 +61,22 @@ class Enemy(pygame.sprite.Sprite):
         self.last_pos = spawn_pos
 
         return spawn_pos
+
+    def update_stats(self):
+        # increase level and stats once the enemy dies
+        self.level += 1
+        if self.level > self.max_level:
+            self.level = self.max_level
+
+        # update stats
+        self.speed = 3 + (self.level)
+        self.max_health = 50 + (self.level*50)
+        self.health = self.max_health
+        self.power = 20 + (self.level*10)
+        self.notice_radius = 350 + (self.level*50)
+        self.worth = 50 + ((self.level-1)*50)
+
+        self.dead = False
 
     def move(self,speed):
         # normalize direction vector to ensure it is a unit vector
@@ -101,6 +117,8 @@ class Enemy(pygame.sprite.Sprite):
         # check if enemy is touching player and not currently attacking
         if player.rect.colliderect(self.rect) and not self.attacking:
             player.take_damage(self.power)
+            if player.is_dead():
+                player.update_stats()
 
             # begin attack cooldown
             self.attacking = True
@@ -138,19 +156,24 @@ class Enemy(pygame.sprite.Sprite):
                 self.hit = False
                 self.image = self.image_1
                 self.rect.topleft = self.get_spawn_pos()
-                self.health = self.max_health
+                self.dead = True
 
             # begin hit cooldown
             self.hit = True
             self.hit_time = pygame.time.get_ticks()
             self.sounds.play('hit_ping')
 
+    def is_dead(self):
+        return self.dead
 
     def get_worth(self):
         return self.worth
 
     def get_health(self):
         return (self.health,self.max_health)
+
+    def get_level(self):
+        return (self.level,self.max_level)
 
     def update(self):
         # upadte enemy

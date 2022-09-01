@@ -1,16 +1,20 @@
 import pygame
 from settings import *
-from text import Text
+from minimap import Minimap
 
 
 class UI:
-    def __init__(self):
+    def __init__(self,visible_sprites,map_size):
         # general setup
         self.screen = pygame.display.get_surface()
         self.font = pygame.font.Font(FONT_2,FONT_SIZE_2)
+        self.visible_sprites = visible_sprites
 
         # bar setup
-        self.health_rect = pygame.Rect((10,10),(200,20))
+        self.health_rect = pygame.Rect((20,20),(200,20))
+
+        # minimap setup
+        self.minimap = Minimap(visible_sprites,map_size)
 
     def draw_health_bar(self,player):
         # draw background bar
@@ -30,15 +34,15 @@ class UI:
 
     def draw_points_text(self,player):
         # draw points text
-        text_surf = self.font.render(f'POINTS: {player.stats["Points"]}',False,FONT_COLOUR_3)
-        text_rect = text_surf.get_rect(topleft = (20,40))
+        text_surf = self.font.render(f'POINTS: {player.stats["Points"]}',True,FONT_COLOUR_3)
+        text_rect = text_surf.get_rect(topleft = (30,54))
         pygame.draw.rect(self.screen,COLOUR_2,text_rect.inflate(20,0))
         self.screen.blit(text_surf,text_rect)
 
     def draw_timer_text(self,timer):
         # draw timer text
-        text_surf = self.font.render(f'{timer.get_timer_time()}',False,FONT_COLOUR_3)
-        text_rect = text_surf.get_rect(topleft = (20,75))
+        text_surf = self.font.render(f'{timer.get_timer_time()}',True,FONT_COLOUR_3)
+        text_rect = text_surf.get_rect(topleft = (30,90))
         pygame.draw.rect(self.screen,COLOUR_2,text_rect.inflate(20,0))
         self.screen.blit(text_surf,text_rect)
 
@@ -47,3 +51,4 @@ class UI:
         self.draw_health_bar(player)
         self.draw_points_text(player)
         self.draw_timer_text(timer)
+        self.minimap.display()

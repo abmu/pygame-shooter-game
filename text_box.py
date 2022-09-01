@@ -15,7 +15,7 @@ class TextBox:
 
         # line flash
         self.flash = True
-        self.flash_cooldown = 1000
+        self.flash_cooldown = 750
         self.flash_time = None
 
     def draw_line(self):
@@ -72,7 +72,7 @@ class TextBox:
                     else:
                         self.flash = True
                         self.flash_time = pygame.time.get_ticks()
-                        if len(self.text) < 11: # 10 characters limit
+                        if len(self.text) < 11: # 11 characters limit
                             self.text += event.unicode
 
     def get_text(self):

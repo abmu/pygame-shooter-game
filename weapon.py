@@ -27,8 +27,7 @@ class Weapon(pygame.sprite.Sprite):
             # ensure the direction magnitude is not 0
             # else the weapon will be drawn on the player
             self.direction.x = 1
-            self.direction.y = 1
-            self.direction = self.direction.normalize()
+            self.direction.y = 0
 
         self.pos = (self.player_rect.centerx+self.direction.x*(PLAYER_SIZE//2+WEAPON_X//2), self.player_rect.centery+self.direction.y*(PLAYER_SIZE//2+WEAPON_X//2))
 

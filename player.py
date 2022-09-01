@@ -23,6 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.image_1
         self.rect = self.image.get_rect(topleft = pos)
         self.start_pos = pos
+        self.drawn_mini = False
         self.draw_priority = 3
 
         # movement
@@ -49,11 +50,21 @@ class Player(pygame.sprite.Sprite):
         self.max_health = 100
         self.health = self.max_health
         self.stats = {'Points':0,'Kills':0,'Deaths':0,'Coins':0}
+        self.dead = False
 
         self.weapon = Weapon(self.rect,[self.visible_sprites],self.visible_sprites)
 
         # sound setup
         self.sounds = sounds
+
+    def update_stats(self):
+        # update stats
+        self.health = self.max_health
+        # deduct points if the player dies
+        self.add_points(-1000)
+        self.increment_stat('Deaths')
+
+        self.dead = False
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -154,15 +165,15 @@ class Player(pygame.sprite.Sprite):
                 self.hit = False
                 self.image = self.image_1
                 self.rect.topleft = self.start_pos
-                self.health = self.max_health
-                # deduct points if the player dies
-                self.add_points(-1000)
-                self.increment_stat('Deaths')
+                self.dead = True
 
             # begin hit cooldown
             self.hit = True
             self.hit_time = pygame.time.get_ticks()
             self.sounds.play('hit_ping')
+
+    def is_dead(self):
+        return self.dead
 
     def get_health(self):
         return (self.health,self.max_health)

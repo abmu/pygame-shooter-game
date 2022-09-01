@@ -13,11 +13,11 @@ class SettingsScreen:
         self.create_title = create_title
 
         # text and buttons setup
-        self.music_text = Text('Music',(WIDTH/2-350,HEIGHT/2-200))
-        self.music_slider = Slider(mixer.music,(WIDTH/2-175,HEIGHT/2-190))
-        self.volume_text = Text('Volume',(WIDTH/2-350,HEIGHT/2-140))
-        self.volume_slider = Slider(sounds,(WIDTH/2-175,HEIGHT/2-140))
-        self.controls_text = Text('Controls',(WIDTH/2-350,HEIGHT/2-80))
+        self.music_text = Text('Music',(WIDTH/2-380,HEIGHT/2-190))
+        self.music_slider = Slider(mixer.music,(WIDTH/2-205,HEIGHT/2-180))
+        self.volume_text = Text('Volume',(WIDTH/2-380,HEIGHT/2-130))
+        self.volume_slider = Slider(sounds,(WIDTH/2-205,HEIGHT/2-130))
+        self.controls_text = Text('Controls',(WIDTH/2-380,HEIGHT/2-70))
         self.create_controls()
         self.back_button = Button('BACK',(10,5),self.create_title)
 
@@ -25,11 +25,11 @@ class SettingsScreen:
         # controls text setup
         self.keys = []
         self.actions = []
-        for i in range(len(CONTROLS)):
-            key = CONTROLS[i][0]
-            act = CONTROLS[i][1]
-            self.keys.append(Button(key,(WIDTH/2-175,HEIGHT/2-80+(i*40)),self.blank))
-            self.actions.append(Text(act,(WIDTH/2+75,HEIGHT/2-80+(i*40))))
+        for i, control in enumerate(CONTROLS):
+            key = control[0]
+            act = control[1]
+            self.keys.append(Button(key,(WIDTH/2-205,HEIGHT/2-70+(i*40)),self.blank))
+            self.actions.append(Text(act,(WIDTH/2+45,HEIGHT/2-70+(i*40))))
 
     def blank(self):
         # button function placeholder

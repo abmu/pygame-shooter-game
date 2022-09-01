@@ -15,6 +15,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rotate(orig_image,orig_rect)
         self.pos_x = self.rect.x
         self.pos_y = self.rect.y
+        self.drawn_mini = False
         self.draw_priority = 3
 
         # movement
@@ -24,7 +25,7 @@ class Bullet(pygame.sprite.Sprite):
 
         # stats
         self.speed = 10
-        self.power = 34
+        self.power = 20
 
     def set_direction(self,middle_pos,mouse_pos):
         # calculate bullet direction vector
@@ -61,9 +62,10 @@ class Bullet(pygame.sprite.Sprite):
                 elif sprite.__class__.__name__ == 'Enemy':
                     sprite.take_damage(self.power)
                     # if the enemy sprite dies and respawns, ie. their health regenerates, award the player a certain amount of points
-                    if sprite.health == sprite.max_health:
+                    if sprite.is_dead():
                         self.add_points(sprite.get_worth())
                         self.increment_stat('Kills')
+                        sprite.update_stats()
                     self.kill()
 
     def update(self):
