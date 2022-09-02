@@ -4,7 +4,13 @@ from pygame import mixer
 class Sounds:
     def __init__(self):
         # general setup
-        self.sounds = {'shoot_ping':mixer.Sound('audio/shoot_ping.wav'),'hit_ping':mixer.Sound('audio/hit_ping.wav'),'coin_ping':mixer.Sound('audio/coin_ping.wav')}
+        self.sounds = {
+        'shoot_ping':mixer.Sound('audio/shoot_ping.wav'),
+        'hit_ping':mixer.Sound('audio/hit_ping.wav'),
+        'death_ping':mixer.Sound('audio/death_ping.wav'),
+        'coin_ping':mixer.Sound('audio/coin_ping.wav'),
+        'food_ping':mixer.Sound('audio/food_ping.wav')
+        }
 
     def play(self,sound):
         # play sound

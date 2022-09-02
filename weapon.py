@@ -8,10 +8,12 @@ class Weapon(pygame.sprite.Sprite):
         super().__init__(groups)
         self.player_rect = player_rect
         self.middle_pos = visible_sprites.get_middle_pos()
-        self.orig_image = pygame.Surface((WEAPON_X,WEAPON_Y)).convert_alpha()
-        self.orig_image.fill('gray30')
+        self.draw_priority = 4
+
+        # stats
+        # default weapon is assault rifle
+        self.change_weapon('Assault rifle')
         self.update()
-        self.draw_priority = 3
 
     def set_direction(self):
         # calculate weapon direction vector
@@ -29,7 +31,7 @@ class Weapon(pygame.sprite.Sprite):
             self.direction.x = 1
             self.direction.y = 0
 
-        self.pos = (self.player_rect.centerx+self.direction.x*(PLAYER_SIZE//2+WEAPON_X//2), self.player_rect.centery+self.direction.y*(PLAYER_SIZE//2+WEAPON_X//2))
+        self.pos = (self.player_rect.centerx+self.direction.x*(PLAYER_SIZE//2+self.size[0]//2), self.player_rect.centery+self.direction.y*(PLAYER_SIZE//2+self.size[0]//2))
 
     def rotate(self):
         # rotate weapon about center by angle between unit vector i and self.direction
@@ -37,9 +39,29 @@ class Weapon(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.orig_image,angle)
         self.rect = self.image.get_rect(center = self.pos)
 
+    def change_weapon(self,weapon):
+        # change weapon to what is passed in
+        self.weapon = weapon
+        self.stats = WEAPON_STATS[weapon]
+        self.size = self.stats['size']
+
+        # create new weapon image
+        self.orig_image = pygame.Surface(self.stats['size']).convert_alpha()
+        self.orig_image.fill('gray30')
+
+    def get_cooldown(self):
+        return self.stats['cooldown']
+
+    def get_weight(self):
+        return self.stats['weight']
+
+    def get_bullet_stats(self):
+        return (self.stats['power'],self.stats['speed'],self.size[1])
+
     def get_pos(self):
         # make start positon of bullet the end position of player weapon
-        return (self.rect.centerx-BULLET_SIZE//2+self.direction.x*(WEAPON_X//2+BULLET_SIZE//2), self.rect.centery-BULLET_SIZE//2+self.direction.y*(WEAPON_X//2+BULLET_SIZE//2))
+        bullet_size = self.size[1] # make bullet size the size of width of weapon
+        return (self.rect.centerx-bullet_size//2+self.direction.x*(self.size[0]//2+bullet_size//2), self.rect.centery-bullet_size//2+self.direction.y*(self.size[0]//2+bullet_size//2))
 
     def update(self):
         # update weapon

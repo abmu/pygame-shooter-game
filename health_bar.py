@@ -10,7 +10,7 @@ class HealthBar(pygame.sprite.Sprite):
         self.get_health = get_health
         self.set_bar_dimensions()
         self.rect = self.image.get_rect(topleft = self.get_pos())
-        self.draw_priority = 2
+        self.draw_priority = 3
 
     def set_bar_dimensions(self):
         # calculate current to max health ratio

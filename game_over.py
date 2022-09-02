@@ -10,6 +10,7 @@ class GameOver:
         # general setup
         self.screen = pygame.display.get_surface()
         self.create_overworld = create_overworld
+        self.escape_pressed = False
         self.stats = stats
         self.username = username
         self.update_points()
@@ -23,21 +24,23 @@ class GameOver:
     def update_points(self):
         # read the old total points from the details.csv file
         with open('details.csv','r') as f:
-            reader = csv.reader(f)
+            reader = csv.DictReader(f)
             lines = list(reader)
 
         # update the points for the user that was just playing
         for line in lines:
-            if line[0] == self.username:
-                line[1] = int(line[1]) + self.stats['Points']
-                line[2] = int(line[2]) + 1 # increment games played
+            if line['USERNAME'] == self.username:
+                line['POINTS'] = int(line['POINTS']) + self.stats['Points']
+                line['GAMESPLAYED'] = int(line['GAMESPLAYED']) + 1 # increment games played
                 break
 
-        self.total_points = line[1]
+        self.total_points = line['POINTS']
 
         # write the updated total points to the file
         with open ('details.csv','w') as f:
-            writer = csv.writer(f)
+            f_names = ['USERNAME','POINTS','GAMESPLAYED']
+            writer = csv.DictWriter(f,fieldnames=f_names)
+            writer.writeheader()
             writer.writerows(lines)
 
     def over_setup(self):
@@ -59,13 +62,25 @@ class GameOver:
         # draw player stats
         i = 0
         for stat in self.stats:
-            if stat != 'Coins':
+            if stat not in ('Coins','Food'):
                 text = Text(f'{self.stats[stat]}',(WIDTH/2+250+(i*85),HEIGHT/2-90))
                 text.display()
                 i += 1
 
+    def input(self):
+        keys = pygame.key.get_pressed()
+
+        # go back to title screen
+        if keys[pygame.K_ESCAPE]:
+            self.escape_pressed = True
+        else:
+            if self.escape_pressed:
+                self.create_overworld()
+                self.escape_pressed = False
+
     def display(self):
         # update and draw game over screen
+        self.input()
         self.screen.blit(self.over_image,self.over_rect)
         self.points_text.display()
         self.total_points_text.display()

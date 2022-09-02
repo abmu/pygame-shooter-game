@@ -18,6 +18,8 @@ class Enemy(pygame.sprite.Sprite):
         self.image_2.fill('green4')
         self.image = self.image_1
         self.rect = self.image.get_rect(topleft = self.get_spawn_pos())
+        self.pos_x = self.rect.x
+        self.pos_y = self.rect.y
         self.drawn_mini = False
         self.draw_priority = 2
 
@@ -30,6 +32,7 @@ class Enemy(pygame.sprite.Sprite):
         self.attacking = False
         self.attack_cooldown = 1000
         self.attack_time = None
+        self.attack_radius = PLAYER_SIZE
 
         # hit
         self.hit = False
@@ -37,9 +40,9 @@ class Enemy(pygame.sprite.Sprite):
         self.hit_time = None
 
         # stats
-        self.level = 0 # starts at level 1 when incremented
+        self.level = 3 # starting level
         self.max_level = 3
-        self.update_stats()
+        self.update_stats(0)
 
         self.health_bar = HealthBar(self.rect,self.get_health,[visible_sprites])
         self.level_bar = LevelText(self.rect,self.get_level,[visible_sprites])
@@ -62,19 +65,22 @@ class Enemy(pygame.sprite.Sprite):
 
         return spawn_pos
 
-    def update_stats(self):
+    def update_stats(self,amount):
         # increase level and stats once the enemy dies
-        self.level += 1
+        self.level += amount
         if self.level > self.max_level:
             self.level = self.max_level
+        elif self.level < 1:
+            self.level = 1
 
         # update stats
-        self.speed = 3 + (self.level)
-        self.max_health = 50 + (self.level*50)
+        self.max_speed = 3 + self.level
+        self.speed = self.max_speed
+        self.max_health = 100 * self.level
         self.health = self.max_health
-        self.power = 20 + (self.level*10)
-        self.notice_radius = 350 + (self.level*50)
-        self.worth = 50 + ((self.level-1)*50)
+        self.power = 100 / (6-self.level) # decrease number of hits required to kill the player by 1 with each level starting with 5
+        self.notice_radius = 400 + (self.level*100)
+        self.worth = 50 * self.level
 
         self.dead = False
 
@@ -84,29 +90,39 @@ class Enemy(pygame.sprite.Sprite):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
 
-        self.rect.x += self.direction.x * speed
+        # increase speed back up if the enemy has slowed down after attacking
+        if self.speed <= self.max_speed:
+            self.speed += 0.05
+            if self.speed >= self.max_speed:
+                self.speed = self.max_speed
+
+        self.pos_x += self.direction.x * speed
+        self.rect.x = round(self.pos_x)
         self.collision('horizontal')
-        self.rect.y += self.direction.y * speed
+        self.pos_y += self.direction.y * speed
+        self.rect.y = round(self.pos_y)
         self.collision('vertical')
 
     def collision(self,direction):
         # handle horizontal collisons with tiles and other enemies
         if direction == 'horizontal':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy') and sprite.rect is not self.rect:
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy','Player') and sprite.rect is not self.rect:
                     if self.direction.x < 0: # moving left
                         self.rect.left = sprite.rect.right
                     elif self.direction.x > 0: # moving right
                         self.rect.right = sprite.rect.left
+                    self.pos_x = self.rect.x
 
         # handle vertical collisions with tiles and other enemies
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy') and sprite.rect is not self.rect:
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy','Player') and sprite.rect is not self.rect:
                     if self.direction.y < 0: # moving up
                         self.rect.top = sprite.rect.bottom
                     elif self.direction.y > 0: # moving down
                         self.rect.bottom = sprite.rect.top
+                    self.pos_y = self.rect.y
 
     def calculate_player_distance_direction(self,player):
         # calculate player distance from enemy
@@ -114,11 +130,17 @@ class Enemy(pygame.sprite.Sprite):
         player_vector = pygame.math.Vector2(player.rect.center)
         self.player_distance = (player_vector-enemy_vector).magnitude()
 
-        # check if enemy is touching player and not currently attacking
-        if player.rect.colliderect(self.rect) and not self.attacking:
+        # attack if they player is within attack radius and enemy is not currently attacking
+        if self.player_distance <= self.attack_radius and not self.attacking:
+            # make the enemy stop moving if they collide with the player to stop them from passing through
             player.take_damage(self.power)
             if player.is_dead():
                 player.update_stats()
+                # decrease level if the enemy gets a kill
+                self.update_stats(-1)
+
+            # slow down speed
+            self.speed -= 3 
 
             # begin attack cooldown
             self.attacking = True
@@ -134,7 +156,7 @@ class Enemy(pygame.sprite.Sprite):
         current_time = pygame.time.get_ticks()
 
         # check if attack cooldown has finished
-        if self.attacking:
+        if self.attacking:  
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.attacking = False
 
@@ -148,20 +170,23 @@ class Enemy(pygame.sprite.Sprite):
         if not self.hit:
             # load hit image
             self.image = self.image_2
+            self.sounds.play('hit_ping')
 
             # make the enemy take damage
             self.health -= power
+            # check if the enemy is dead
             if self.health <= 0:
                 # make the enemy respawn once they die
-                self.hit = False
                 self.image = self.image_1
                 self.rect.topleft = self.get_spawn_pos()
+                self.pos_x = self.rect.x
+                self.pos_y = self.rect.y
                 self.dead = True
-
-            # begin hit cooldown
-            self.hit = True
-            self.hit_time = pygame.time.get_ticks()
-            self.sounds.play('hit_ping')
+                self.sounds.play('death_ping')
+            else:
+                # begin hit cooldown
+                self.hit = True
+                self.hit_time = pygame.time.get_ticks()
 
     def is_dead(self):
         return self.dead

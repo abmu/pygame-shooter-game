@@ -21,9 +21,11 @@ class TileMini(pygame.sprite.Sprite):
         elif name =='Enemy':
             return 'green1'
         elif name =='Bullet':
-            return 'pink1'
+            return 'red4'
         elif name == 'Coin':
             return 'goldenrod1'
+        elif name == 'Food':
+            return 'deepskyblue1'
         else:
             # tile sprite
             return 'gray30'

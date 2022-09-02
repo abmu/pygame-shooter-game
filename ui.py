@@ -46,9 +46,17 @@ class UI:
         pygame.draw.rect(self.screen,COLOUR_2,text_rect.inflate(20,0))
         self.screen.blit(text_surf,text_rect)
 
-    def display(self,player,timer):
+    def draw_weapon_text(self,weapon):
+        # draw weapon text
+        text_surf = self.font.render(f'{weapon.weapon.upper()}',True,FONT_COLOUR_3)
+        text_rect = text_surf.get_rect(topleft = (30,126))
+        pygame.draw.rect(self.screen,COLOUR_2,text_rect.inflate(20,0))
+        self.screen.blit(text_surf,text_rect)
+
+    def display(self,player,timer,weapon):
         # update and draw ui
         self.draw_health_bar(player)
         self.draw_points_text(player)
         self.draw_timer_text(timer)
+        self.draw_weapon_text(weapon)
         self.minimap.display()

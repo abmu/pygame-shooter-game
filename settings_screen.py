@@ -11,6 +11,7 @@ class SettingsScreen:
         # general setup
         self.screen = pygame.display.get_surface()
         self.create_title = create_title
+        self.escape_pressed = False
 
         # text and buttons setup
         self.music_text = Text('Music',(WIDTH/2-380,HEIGHT/2-190))
@@ -35,8 +36,20 @@ class SettingsScreen:
         # button function placeholder
         pass
 
+    def input(self):
+        keys = pygame.key.get_pressed()
+
+        # go back to title screen
+        if keys[pygame.K_ESCAPE]:
+            self.escape_pressed = True
+        else:
+            if self.escape_pressed:
+                self.create_title()
+                self.escape_pressed = False
+
     def run(self):
         # update and draw the settings screen
+        self.input()
         self.music_text.display()
         self.music_slider.display()
         self.volume_text.display()

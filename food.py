@@ -4,16 +4,16 @@ from pygame import mixer
 from settings import *
 
 
-class Coin(pygame.sprite.Sprite):
+class Food(pygame.sprite.Sprite):
     def __init__(self,spawn_positions,groups,obstacle_sprites,sounds):
-        # coin setup
+        # food setup
         super().__init__(groups)
         self.spawn_positions = spawn_positions
         self.last_pos = None
-        self.image_1 = pygame.Surface((COIN_SIZE,COIN_SIZE)).convert_alpha()
-        self.image_1.fill('goldenrod1')
-        self.image_2 = pygame.Surface((COIN_SIZE,COIN_SIZE)).convert_alpha()
-        self.image_2.fill('lightgoldenrod1')
+        self.image_1 = pygame.Surface((FOOD_SIZE,FOOD_SIZE)).convert_alpha()
+        self.image_1.fill('deepskyblue1')
+        self.image_2 = pygame.Surface((FOOD_SIZE,FOOD_SIZE)).convert_alpha()
+        self.image_2.fill('lightskyblue1')
         self.image = self.image_1
         self.rect = self.image.get_rect(topleft = self.get_spawn_pos())
         self.drawn_mini = False
@@ -28,7 +28,7 @@ class Coin(pygame.sprite.Sprite):
         self.hit_time = None
 
         # stats
-        self.worth = 500
+        self.health = 50
 
         # sound setup
         self.sounds = sounds
@@ -53,16 +53,16 @@ class Coin(pygame.sprite.Sprite):
         for sprite in self.obstacle_sprites:
             if sprite.rect.colliderect(self.rect): 
                 if sprite.__class__.__name__ == 'Player':
-                    # give points if player touches the coin and make the coin respawn
+                    # give points if player touches the food and make the food respawn
                     if not self.hit:
                         self.image = self.image_2
-                        sprite.add_points(self.worth)
-                        sprite.increment_stat('Coins')
+                        sprite.add_health(self.health)
+                        sprite.increment_stat('Food')
 
                         # begin hit animation cooldown
                         self.hit = True
                         self.hit_time = pygame.time.get_ticks()
-                        self.sounds.play('coin_ping')
+                        self.sounds.play('food_ping')
 
     def cooldowns(self):
         current_time = pygame.time.get_ticks()
@@ -72,10 +72,10 @@ class Coin(pygame.sprite.Sprite):
             if current_time - self.hit_time >= self.hit_cooldown:
                 self.hit = False
                 self.image = self.image_1
-                # make the coin respawn
+                # make the food respawn
                 self.rect.topleft = self.get_spawn_pos()
 
     def update(self):
-        # update coin
+        # update food
         self.cooldowns()
         self.collision()

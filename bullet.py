@@ -3,10 +3,14 @@ from settings import *
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites,visible_sprites,add_points,increment_stat):
+    def __init__(self,pos,groups,obstacle_sprites,visible_sprites,add_points,increment_stat,get_bullet_stats):
         # bullet setup
         super().__init__(groups)
-        orig_image = pygame.Surface((BULLET_SIZE,BULLET_SIZE)).convert_alpha()
+        # stats
+        self.power,self.speed,bullet_size = get_bullet_stats()
+        self.dead = False
+        
+        orig_image = pygame.Surface((bullet_size,bullet_size)).convert_alpha()
         orig_image.fill('red')
         orig_rect = orig_image.get_rect(topleft = pos)
         middle_pos = visible_sprites.get_middle_pos()
@@ -22,10 +26,6 @@ class Bullet(pygame.sprite.Sprite):
         self.obstacle_sprites = obstacle_sprites
         self.add_points = add_points
         self.increment_stat = increment_stat
-
-        # stats
-        self.speed = 10
-        self.power = 20
 
     def set_direction(self,middle_pos,mouse_pos):
         # calculate bullet direction vector
@@ -65,7 +65,7 @@ class Bullet(pygame.sprite.Sprite):
                     if sprite.is_dead():
                         self.add_points(sprite.get_worth())
                         self.increment_stat('Kills')
-                        sprite.update_stats()
+                        sprite.update_stats(1)
                     self.kill()
 
     def update(self):

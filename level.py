@@ -4,6 +4,7 @@ from pygame import mixer
 from tile import Tile
 from floor import Floor
 from coin import Coin
+from food import Food
 from player import Player
 from bullet import Bullet
 from enemy import Enemy
@@ -33,8 +34,9 @@ class Level:
         self.pause_pressed = False
 
     def create_map(self):
+        player_pos = {}
         enemy_pos = {}
-        coin_pos = {}
+        pickup_pos = {}
         for row_index, row in enumerate(MAP_ARRAY):
             for col_index, col in enumerate(row):
                 # create sprites at correct positions
@@ -43,28 +45,35 @@ class Level:
                 if col == 'x':
                     Tile((x,y),[self.visible_sprites,self.obstacle_sprites])
                 elif col == 'P':
-                    self.player = Player((x,y),[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_bullet,self.sounds)
+                    player_pos[(x,y)] = False # ie. (x,y) position is not currently occupied
                 elif col == 'E':
-                    enemy_pos[(x,y)] = False # ie. (x,y) position is not currently occupied
+                    enemy_pos[(x,y)] = False
                 elif col == 'C':
-                    coin_pos[(x,y)] = False
+                    pickup_pos[(x,y)] = False
 
         self.map_size = (x,y)
         Floor((0,0),[self.visible_sprites],self.map_size)
 
-        # the number of coins and enemies should be less than the number of possible positions
+        self.player = Player(player_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_bullet,self.sounds)
+
+        # the number of pickups and enemies should be less than the number of possible positions
         # create enemy sprites in random enemy positions
         enemy_count = 10
         for count in range(enemy_count):
             Enemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.sounds)
 
-        # create coin sprites in random coin positions
+        # create coin sprites in random pickup positions
         coin_count = 3
         for count in range(coin_count):
-            Coin(coin_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.sounds)
+            Coin(pickup_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.sounds)
 
-    def create_bullet(self,add_points,increment_stat):
-        Bullet(self.player.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites,add_points,increment_stat)
+        # create food sprites in random pickup positions
+        food_count = 1
+        for count in range(food_count):
+            Food(pickup_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.sounds)
+
+    def create_bullet(self,add_points,increment_stat,get_bullet_stats):
+        Bullet(self.player.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites,add_points,increment_stat,get_bullet_stats)
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -108,7 +117,7 @@ class Level:
 
             # update and draw the level map and ui
             self.visible_sprites.draw(self.player)
-            self.ui.display(self.player,self.timer)
+            self.ui.display(self.player,self.timer,self.player.weapon)
 
             if self.status == 'play':
                 # game playing

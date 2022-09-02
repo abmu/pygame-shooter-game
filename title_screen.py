@@ -33,24 +33,32 @@ class TitleScreen:
 
     def points_text_setup(self):
         found = False
+        empty = True
         points = 0
+        f_names = ['USERNAME','POINTS','GAMESPLAYED']
         # open the details.csv file
         # line format [USERNAME,POINTS,GAMESPLAYED]
         with open('details.csv','a+') as f:
             f.seek(0)
-            reader = csv.reader(f)
+            reader = csv.DictReader(f)
             # iterate over each line in file
             for line in reader:
                 # if the file is not empty the program will enter this for loop
-                if line[0] == self.username:
+                empty = False
+                if line['USERNAME'] == self.username:
                     found = True
-                    points = line[1]
+                    points = line['POINTS']
                     break
+
+            # setup file if it is empty
+            if empty:
+                writer = csv.DictWriter(f,fieldnames=f_names)
+                writer.writeheader()              
 
             # add new user to file if it doesn't already exist
             if not found:
-                writer = csv.writer(f)
-                writer.writerow([self.username,points,0])
+                writer = csv.DictWriter(f,fieldnames=f_names)
+                writer.writerow({'USERNAME':self.username,'POINTS':points,'GAMESPLAYED':0})
 
         self.points_text = Text(f'Total Points: {points}',(WIDTH/2+50,HEIGHT/2-40))
 

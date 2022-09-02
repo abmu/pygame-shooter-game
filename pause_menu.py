@@ -47,7 +47,7 @@ class PauseMenu:
         # draw player stats
         i = 0
         for stat in self.stats:
-            if stat != 'Coins':
+            if stat not in ('Coins','Food'):
                 text = Text(f'{self.stats[stat]}',(WIDTH/2+65+(i*85),HEIGHT/2-55))
                 text.display()
                 i += 1

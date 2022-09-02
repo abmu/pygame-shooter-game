@@ -19,7 +19,7 @@ class Game:
 
         # sound setup
         mixer.music.load(MUSIC)
-        mixer.music.set_volume(1) # initialise music volume to 1 (pygame sets it to ~0.99)
+        mixer.music.set_volume(1) # initialise music volume to 1 (pygame sets it to ~0.99) 
         self.sounds = Sounds()
 
         # default game screen
