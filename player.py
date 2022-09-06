@@ -4,6 +4,7 @@ import random
 from pygame import mixer
 from settings import *
 from weapon import Weapon
+from reload_bar import ReloadBar
 
 
 class Player(pygame.sprite.Sprite):
@@ -55,6 +56,8 @@ class Player(pygame.sprite.Sprite):
         # weapons
         self.weapon = Weapon(self.rect,[self.visible_sprites],self.visible_sprites)
         self.update_speed()
+
+        self.reload_bar = ReloadBar(self.rect,self.get_attack_cooldown,[self.visible_sprites])
 
         # sound setup
         self.sounds = sounds
@@ -160,7 +163,7 @@ class Player(pygame.sprite.Sprite):
         # handle horizontal collisons
         if direction == 'horizontal':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy'):
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy','BossEnemy'):
                     if self.direction.x < 0: # moving left
                         self.rect.left = sprite.rect.right
                     elif self.direction.x > 0: # moving right
@@ -170,7 +173,7 @@ class Player(pygame.sprite.Sprite):
         # handle vertical collisions
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy'):
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy','BossEnemy'):
                     if self.direction.y < 0: # moving up
                         self.rect.top = sprite.rect.bottom
                     elif self.direction.y > 0: # moving down
@@ -190,6 +193,13 @@ class Player(pygame.sprite.Sprite):
             if current_time - self.hit_time >= self.hit_cooldown:
                 self.hit = False
                 self.image = self.image_1
+
+    def get_attack_cooldown(self):
+        # return the time the weapon has been on cooldown for and the total cooldown duration
+        if self.attacking:
+            current_time = pygame.time.get_ticks()
+            return (current_time - self.attack_time, self.weapon.get_cooldown())
+        return (0, self.weapon.get_cooldown())
 
     def take_damage(self,power):
         if not self.hit:

@@ -7,12 +7,14 @@ from button import Button
 
 
 class TitleScreen:
-    def __init__(self,create_level,create_settings,username):
+    def __init__(self,create_level,create_settings,create_login,username):
         # general setup
         self.screen = pygame.display.get_surface()
         self.create_level = create_level
         self.create_settings = create_settings
+        self.create_login = create_login
         self.username = username
+        self.escape_pressed = False
 
         # title, text and buttons setup
         self.title_setup()
@@ -20,16 +22,24 @@ class TitleScreen:
         self.points_text_setup()
         self.play_button = Button('PLAY',(WIDTH/2+50,HEIGHT/2+10),self.create_level)
         self.settings_button = Button('SETTINGS',(WIDTH/2+50,HEIGHT/2+50),self.create_settings)
-        self.quit_button = Button('QUIT',(10,5),self.quit)
+        self.back_button = Button('LOGOUT',(10,5),self.create_login)
+        self.quit_button = Button('QUIT',(10,45),self.quit)
 
     def title_setup(self):
         # scale down the title image
         image = pygame.image.load('graphics/title.png').convert_alpha()
         size = image.get_rect().size
         # make the scaled 2 times smaller
-        new_size = (size[0]//2,size[1]//2) # (new width, new height)
-        self.title_image = pygame.transform.scale(image, new_size)
-        self.title_rect = self.title_image.get_rect(topleft = (WIDTH/2-400,HEIGHT/2-(new_size[1]/2)))
+        self.new_size = (size[0]//2,size[1]//2) # (new width, new height)
+        self.title_image = pygame.transform.scale(image, self.new_size)
+        self.title_rect = self.title_image.get_rect(topright = (WIDTH/2,HEIGHT/2-(self.new_size[1]/2)))
+
+    # def draw_line(self):
+    #     # draw line next to title
+    #     pos = (self.title_rect.x+self.new_size[0],self.title_rect.y)
+    #     size = (5,self.new_size[1])
+    #     rect = pygame.Rect(pos,size)
+    #     pygame.draw.rect(self.screen,'red',rect)
 
     def points_text_setup(self):
         found = False
@@ -66,11 +76,24 @@ class TitleScreen:
         pygame.quit()
         sys.exit()
 
+    def input(self):
+        keys = pygame.key.get_pressed()
+
+        # go back to login screen
+        if keys[pygame.K_ESCAPE]:
+            self.escape_pressed = True
+        else:
+            if self.escape_pressed:
+                self.create_login()
+                self.escape_pressed = False
+
     def run(self):
         # update and draw the title screen
+        self.input()
         self.screen.blit(self.title_image,self.title_rect)
         self.name_text.display()
         self.points_text.display()
         self.play_button.display()
         self.settings_button.display()
         self.quit_button.display()
+        self.back_button.display()

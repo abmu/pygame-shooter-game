@@ -3,12 +3,12 @@ from settings import *
 
 
 class TileMini(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,sprite,map_size):
+    def __init__(self,groups,sprite,map_size,multiplier):
         # mini tile setup
         super().__init__(groups)
         self.sprite = sprite
         self.map_size = map_size
-        self.image = pygame.Surface((TILE_MINI_SIZE,TILE_MINI_SIZE)).convert_alpha()
+        self.image = pygame.Surface((TILE_MINI_SIZE*multiplier,TILE_MINI_SIZE*multiplier)).convert_alpha()
         self.image.fill(self.get_colour())
         self.rect = self.image.get_rect(topleft = self.get_pos())
         self.draw_priority = 4
@@ -20,6 +20,8 @@ class TileMini(pygame.sprite.Sprite):
             return 'red1'
         elif name =='Enemy':
             return 'green1'
+        elif name == 'BossEnemy':
+            return 'olivedrab1'
         elif name =='Bullet':
             return 'red4'
         elif name == 'Coin':

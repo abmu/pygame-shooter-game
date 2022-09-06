@@ -32,7 +32,9 @@ class Enemy(pygame.sprite.Sprite):
         self.attacking = False
         self.attack_cooldown = 1000
         self.attack_time = None
-        self.attack_radius = PLAYER_SIZE
+        # distance between player and enemy takes the center of the player and enemy
+        # if the enemy is touching the player then attack
+        self.attack_radius = ENEMY_SIZE/2 + PLAYER_SIZE/2 + 1
 
         # hit
         self.hit = False
@@ -40,12 +42,12 @@ class Enemy(pygame.sprite.Sprite):
         self.hit_time = None
 
         # stats
-        self.level = 3 # starting level
+        self.level = 1 # starting level
         self.max_level = 3
         self.update_stats(0)
 
         self.health_bar = HealthBar(self.rect,self.get_health,[visible_sprites])
-        self.level_bar = LevelText(self.rect,self.get_level,[visible_sprites])
+        self.level_text = LevelText(self.rect,self.get_level,[visible_sprites])
 
         # sound setup
         self.sounds = sounds
@@ -107,7 +109,7 @@ class Enemy(pygame.sprite.Sprite):
         # handle horizontal collisons with tiles and other enemies
         if direction == 'horizontal':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy','Player') and sprite.rect is not self.rect:
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy','BossEnemy','Player') and sprite.rect is not self.rect:
                     if self.direction.x < 0: # moving left
                         self.rect.left = sprite.rect.right
                     elif self.direction.x > 0: # moving right
@@ -117,7 +119,7 @@ class Enemy(pygame.sprite.Sprite):
         # handle vertical collisions with tiles and other enemies
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
-                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy','Player') and sprite.rect is not self.rect:
+                if sprite.rect.colliderect(self.rect) and sprite.__class__.__name__ in ('Tile','Enemy','BossEnemy','Player') and sprite.rect is not self.rect:
                     if self.direction.y < 0: # moving up
                         self.rect.top = sprite.rect.bottom
                     elif self.direction.y > 0: # moving down

@@ -8,6 +8,8 @@ from food import Food
 from player import Player
 from bullet import Bullet
 from enemy import Enemy
+from boss_enemy import BossEnemy
+from boss_bullet import BossBullet
 from timer import Timer
 from ui import UI
 from pause_menu import PauseMenu
@@ -62,6 +64,9 @@ class Level:
         for count in range(enemy_count):
             Enemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.sounds)
 
+        # create a boss sprite in a random enemy position
+        BossEnemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_boss_bullet,self.sounds)
+
         # create coin sprites in random pickup positions
         coin_count = 3
         for count in range(coin_count):
@@ -74,6 +79,9 @@ class Level:
 
     def create_bullet(self,add_points,increment_stat,get_bullet_stats):
         Bullet(self.player.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites,add_points,increment_stat,get_bullet_stats)
+
+    def create_boss_bullet(self,pos,vector,rect):
+        BossBullet(pos,[self.visible_sprites],self.obstacle_sprites,vector,rect)
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -158,6 +166,6 @@ class CameraGroup(pygame.sprite.Group):
 
     def enemy_update(self,player):
         # give the enemy objects access to the player object
-        enemy_sprites = [sprite for sprite in self.sprites() if sprite.__class__.__name__ == 'Enemy']
+        enemy_sprites = [sprite for sprite in self.sprites() if sprite.__class__.__name__ in ('Enemy','BossEnemy')]
         for enemy in enemy_sprites:
             enemy.enemy_update(player)

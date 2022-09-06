@@ -33,7 +33,7 @@ class Game:
         # check if username is valid
         username = self.login.get_username()
         if not username.isspace() and len(username) > 0:
-            self.overworld = Overworld(self.create_level,self.sounds,username)
+            self.overworld = Overworld(self.create_level,self.create_login,self.sounds,username)
             self.status = 'overworld'
 
     def create_level(self):

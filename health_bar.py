@@ -8,6 +8,7 @@ class HealthBar(pygame.sprite.Sprite):
         super().__init__(groups)
         self.enemy_rect = enemy_rect
         self.get_health = get_health
+        self.size = ENEMY_SIZE
         self.set_bar_dimensions()
         self.rect = self.image.get_rect(topleft = self.get_pos())
         self.draw_priority = 3
@@ -18,12 +19,18 @@ class HealthBar(pygame.sprite.Sprite):
         ratio = enemy_health[0] / enemy_health[1]
 
         # make new health bar image
-        self.image = pygame.Surface((ENEMY_SIZE*ratio,10)).convert_alpha()
+        self.image = pygame.Surface((self.size*ratio,10)).convert_alpha()
         self.image.fill('red')
         
     def get_pos(self):
         # make position of the health bar underneath the enemy
-        return (self.enemy_rect.centerx-ENEMY_SIZE//2,self.enemy_rect.centery+ENEMY_SIZE//2+10)
+        return (self.enemy_rect.centerx-self.size//2,self.enemy_rect.centery+self.size//2+10)
+
+    def change_rect(self,rect,get_health,BOSS_SIZE):
+        # change the rect that the health bar is attached to
+        self.enemy_rect = rect
+        self.get_health = get_health
+        self.size = BOSS_SIZE
 
     def update(self):
         # update enemy health bar

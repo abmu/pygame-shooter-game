@@ -12,13 +12,15 @@ TILE_SIZE = 64
 TILE_MINI_SIZE = 4
 PLAYER_SIZE = 48
 ENEMY_SIZE = 40
+BOSS_SIZE = 128
+BOSS_BULLET_SIZE = 20
 COIN_SIZE = 32
 FOOD_SIZE = 32
 
 WEAPON_STATS = {
     'Pistol':{'power':15,'speed':10,'cooldown':200,'size':(24,12),'weight':0},
     'Assault rifle':{'power':30,'speed':10,'cooldown':100,'size':(32,16),'weight':1},
-    'Sniper':{'power':100,'speed':20,'cooldown':500,'size':(40,20),'weight':2}
+    'Sniper':{'power':150,'speed':15,'cooldown':500,'size':(40,20),'weight':2}
 }
 
 CONTROLS = [
