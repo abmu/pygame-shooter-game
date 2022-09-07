@@ -21,7 +21,7 @@ class BossEnemy(Enemy):
         self.pos_y = self.rect.y
 
         # attack
-        self.attack_radius = BOSS_SIZE/2 + PLAYER_SIZE/2 + 1
+        self.attack_radius = BOSS_SIZE/2 + PLAYER_SIZE/2 + 5
         self.create_boss_bullet = create_boss_bullet
 
         # update the health bar
@@ -31,11 +31,11 @@ class BossEnemy(Enemy):
 
     def update_stats(self,amount):
         # don't change stats once boss enemy dies
-        self.max_speed = 2
+        self.max_speed = 3
         self.speed = self.max_speed
-        self.max_health = 1000
+        self.max_health = 2000
         self.health = self.max_health
-        self.power = 50
+        self.power = 30
         self.notice_radius = 500
         self.worth = 300
         self.dead = False
@@ -52,11 +52,9 @@ class BossEnemy(Enemy):
             player.take_damage(self.power)
             if player.is_dead():
                 player.update_stats()
-                # decrease level if the enemy gets a kill
-                self.update_stats(-1)
 
             # slow down speed
-            self.speed -= 3 
+            self.speed -= 2 
 
             # begin attack cooldown
             self.attacking = True
@@ -68,6 +66,9 @@ class BossEnemy(Enemy):
             if not self.attacking:
                 self.sounds.play('shoot_ping')
                 self.create_boss_bullet((self.rect.centerx-BOSS_BULLET_SIZE/2,self.rect.centery-BOSS_BULLET_SIZE/2),player_vector-enemy_vector,self.rect)
+
+                # slow down speed
+                self.speed -= 2 
 
                 # begin attack cooldown
                 self.attacking = True

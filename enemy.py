@@ -34,7 +34,7 @@ class Enemy(pygame.sprite.Sprite):
         self.attack_time = None
         # distance between player and enemy takes the center of the player and enemy
         # if the enemy is touching the player then attack
-        self.attack_radius = ENEMY_SIZE/2 + PLAYER_SIZE/2 + 1
+        self.attack_radius = ENEMY_SIZE/2 + PLAYER_SIZE/2 + 5
 
         # hit
         self.hit = False

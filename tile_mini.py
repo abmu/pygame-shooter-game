@@ -24,6 +24,8 @@ class TileMini(pygame.sprite.Sprite):
             return 'olivedrab1'
         elif name =='Bullet':
             return 'red4'
+        elif name == 'BossBullet':
+            return 'olivedrab4'
         elif name == 'Coin':
             return 'goldenrod1'
         elif name == 'Food':

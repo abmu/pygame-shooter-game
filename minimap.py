@@ -27,7 +27,7 @@ class Minimap():
         for sprite in self.visible_sprites:
             # exclude particular sprites from the minimap
             # accept tiles, players, enemies, bullets, coins
-            if sprite.__class__.__name__ in ('Tile','Player','Enemy','Bullet','Coin','Food','BossEnemy'): 
+            if sprite.__class__.__name__ in ('Tile','Player','Enemy','Bullet','Coin','Food','BossEnemy','BossBullet'): 
                 # check if the sprite has already been added to the minimap
                 if sprite.drawn_mini == False:
                     sprite.drawn_mini = True
