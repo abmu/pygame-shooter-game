@@ -30,6 +30,11 @@ class Slider:
         text = Text(str(round(self.volume*100)),(self.pos[0]+550,self.pos[1]-10))
         text.display()
 
+    def check_hover(self):
+        # change cursor to 'IBEAM' if the cursor is hovering over the text box
+        if self.slider_rect.collidepoint(pygame.mouse.get_pos()) or self.current_rect.collidepoint(pygame.mouse.get_pos()):
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()
         # check if the slider was pressed
@@ -70,3 +75,4 @@ class Slider:
         self.draw_slider()
         self.draw_text()
         self.check_click()
+        self.check_hover()

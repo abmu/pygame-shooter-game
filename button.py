@@ -14,12 +14,23 @@ class Button:
         self.colour = FONT_COLOUR_1
         self.text = text
         self.pos = pos
+        self.alpha = 255
 
     def draw_text(self):
         # draw the button text
         self.text_surf = self.font.render(self.text,True,self.colour)
+        self.text_surf.set_alpha(self.alpha)
         self.text_rect = self.text_surf.get_rect(topleft = self.pos)
         self.screen.blit(self.text_surf,self.text_rect)
+
+    def set_alpha(self,alpha):
+        # change alpha
+        self.alpha = alpha
+
+    def check_hover(self):
+        # change cursor to 'IBEAM' if the cursor is hovering over the text box
+        if self.text_rect.collidepoint(pygame.mouse.get_pos()):
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
 
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -37,7 +48,6 @@ class Button:
         else:
             self.colour = FONT_COLOUR_1
 
-
     def click_func(self):
         # print('clicked!')
         self.func()
@@ -46,4 +56,5 @@ class Button:
         # update and draw button
         self.draw_text()
         self.check_click()
+        self.check_hover()
 

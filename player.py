@@ -57,7 +57,8 @@ class Player(pygame.sprite.Sprite):
         self.weapon = Weapon(self.rect,[self.visible_sprites],self.visible_sprites)
         self.update_speed()
 
-        self.reload_bar = ReloadBar(self.rect,self.get_attack_cooldown,[self.visible_sprites])
+        if RELOAD_BAR: # check if the reload bar is enabled in settings file
+            self.reload_bar = ReloadBar(self.rect,self.get_attack_cooldown,[self.visible_sprites])
 
         # sound setup
         self.sounds = sounds

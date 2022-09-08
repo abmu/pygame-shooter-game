@@ -17,6 +17,8 @@ BOSS_BULLET_SIZE = 20
 COIN_SIZE = 32
 FOOD_SIZE = 32
 
+RELOAD_BAR = False
+
 WEAPON_STATS = {
     'Pistol':{'power':15,'speed':10,'cooldown':200,'size':(24,12),'weight':0},
     'Assault rifle':{'power':30,'speed':10,'cooldown':100,'size':(32,16),'weight':1},

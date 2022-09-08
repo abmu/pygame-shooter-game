@@ -117,6 +117,7 @@ class Level:
         # play game ie. let sprites move unless the game is paused or is over
         if self.status == 'over':
             # game over
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             self.screen.fill('white')
             self.game_over.display()
         else:
@@ -137,6 +138,7 @@ class Level:
                     self.create_over()
             elif self.status == 'pause':
                 # game paused
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                 self.pause_menu.display()
 
 

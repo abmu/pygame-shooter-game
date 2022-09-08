@@ -30,11 +30,9 @@ class Game:
         self.status = 'login'
 
     def create_overworld(self):
-        # check if username is valid
         username = self.login.get_username()
-        if not username.isspace() and len(username) > 0:
-            self.overworld = Overworld(self.create_level,self.create_login,self.sounds,username)
-            self.status = 'overworld'
+        self.overworld = Overworld(self.create_level,self.create_login,self.sounds,username)
+        self.status = 'overworld'
 
     def create_level(self):
         self.level = Level(self.create_overworld,self.sounds,self.login.get_username())
@@ -44,12 +42,15 @@ class Game:
     def display_screen(self,event_list):
         # display the overworld screen or the level screen depending on what has happened in game
         if self.status == 'login':
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             self.screen.fill('white')
             self.login.run(event_list)
         elif self.status == 'overworld':
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             self.screen.fill('white')
             self.overworld.run()
         else:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR)
             self.screen.fill('black')
             self.level.run()
 

@@ -7,6 +7,7 @@ class TextBox:
     def __init__(self,pos):
         # general setup
         self.screen = pygame.display.get_surface()
+        self.screen_colour = 'white'
 
         # text box setup
         self.text = ''
@@ -17,6 +18,9 @@ class TextBox:
         self.flash = True
         self.flash_cooldown = 750
         self.flash_time = None
+
+        # overlay rect -> allow you hide to textbox
+        self.alpha = 255
 
     def draw_line(self):
         # draw flashing current character indicator
@@ -49,6 +53,11 @@ class TextBox:
         self.input_text = Text(self.text,(self.pos[0]+5,self.pos[1]-3))
         self.input_text.display()
 
+    def check_hover(self):
+        # change cursor to 'IBEAM' if the cursor is hovering over the text box
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_IBEAM)
+
     def update(self,event_list):
         # update text box when key pressed
         for event in event_list:
@@ -78,8 +87,21 @@ class TextBox:
     def get_text(self):
         return self.text
 
+    def draw_overlay_rect(self):
+        # draw overlay rectangle
+        rect = pygame.Surface((self.rect.width+1,self.rect.height+1)) # rect has a border of 1 pixel wide
+        rect.fill(self.screen_colour)
+        rect.set_alpha(255-self.alpha)
+        self.screen.blit(rect,(self.pos[0]-0.5,self.pos[1]-0.5))
+
+    def set_alpha(self,alpha):
+        # change alpha
+        self.alpha = alpha
+
     def display(self,event_list):
         # update and draw text box
         self.draw_text()
         self.draw_text_box()
+        self.draw_overlay_rect()
+        self.check_hover()
         self.update(event_list)

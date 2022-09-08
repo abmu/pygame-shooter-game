@@ -8,7 +8,7 @@ class BossBullet(pygame.sprite.Sprite):
         super().__init__(groups)
         # stats
         self.power = 34
-        self.speed = 15
+        self.speed = 10
 
         self.vector = vector
         self.boss_rect = boss_rect # rect of the boss enemy that shot bullet
