@@ -60,12 +60,14 @@ class Level:
 
         # the number of pickups and enemies should be less than the number of possible positions
         # create enemy sprites in random enemy positions
-        enemy_count = 10
+        enemy_count = 6 * DIFFICULTY
         for count in range(enemy_count):
             Enemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.sounds)
 
         # create a boss sprite in a random enemy position
-        BossEnemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_boss_bullet,self.sounds)
+        boss_count = 1 * DIFFICULTY
+        for count in range(boss_count):
+            BossEnemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_boss_bullet,self.sounds)
 
         # create coin sprites in random pickup positions
         coin_count = 3
@@ -73,7 +75,7 @@ class Level:
             Coin(pickup_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.sounds)
 
         # create food sprites in random pickup positions
-        food_count = 1
+        food_count = 2 + DIFFICULTY
         for count in range(food_count):
             Food(pickup_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.sounds)
 

@@ -6,7 +6,7 @@ class LevelText(pygame.sprite.Sprite):
     def __init__(self,enemy_rect,get_level,groups):
         # level bar setup
         super().__init__(groups)
-        self.font = pygame.font.Font(FONT_2,FONT_SIZE_2)
+        self.font = pygame.font.Font(FONT_2,FONT_SIZE_2-1)
         self.enemy_rect = enemy_rect
         self.get_level = get_level
         self.setup_text()
@@ -18,7 +18,7 @@ class LevelText(pygame.sprite.Sprite):
         text = enemy_level[0]
 
         # create text 'image'
-        self.image = self.font.render(f'{text}',True,COLOUR_2)
+        self.image = self.font.render(f'LV{text}',True,COLOUR_2)
         self.rect = self.image.get_rect(center = self.get_pos())
 
     def get_pos(self):

@@ -2,7 +2,9 @@
 WIDTH = 1280
 HEIGHT = 720
 FPS = 60
-GAME_LENGTH = 60
+GAME_LENGTH = 120
+
+DIFFICULTY = 1 # between 1-3
 
 TITLE = 'Shooter Game'
 ICON = 'graphics/icon.png'
