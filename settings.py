@@ -3,13 +3,14 @@ WIDTH = 1280
 HEIGHT = 720
 FPS = 60
 GAME_LENGTH = 120
-
-DIFFICULTY = 1 # between 1-3
-
 TITLE = 'Shooter Game'
 ICON = 'graphics/icon.png'
 MUSIC = 'audio/8-bit-Monsters.mp3'
 
+VOLUME = 1
+DIFFICULTY = 1 # between 1-3
+
+# game sprites
 TILE_SIZE = 64
 TILE_MINI_SIZE = 4
 PLAYER_SIZE = 48
@@ -20,7 +21,6 @@ COIN_SIZE = 32
 FOOD_SIZE = 32
 
 RELOAD_BAR = False
-
 WEAPON_STATS = {
     'Pistol':{'power':15,'speed':10,'cooldown':200,'size':(24,12),'weight':0},
     'Assault rifle':{'power':30,'speed':10,'cooldown':100,'size':(32,16),'weight':1},

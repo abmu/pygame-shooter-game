@@ -7,6 +7,7 @@ from overworld import Overworld
 from level import Level
 from sounds import Sounds
 
+
 class Game:
     def __init__(self):
         # pygame and screen setup
@@ -19,7 +20,7 @@ class Game:
 
         # sound setup
         mixer.music.load(MUSIC)
-        mixer.music.set_volume(1) # initialise music volume to 1 (pygame sets it to ~0.99) 
+        mixer.music.set_volume(VOLUME) # initialise music volume to 1 (pygame sets it to ~0.99) 
         self.sounds = Sounds()
 
         # default game screen

@@ -108,7 +108,7 @@ class Enemy(pygame.sprite.Sprite):
         # return new enemy size
         return ENEMY_SIZE + (self.level-1)*5
 
-    def move(self,speed):
+    def move(self):
         # normalize direction vector to ensure it is a unit vector
         # if direction vector is diagonal the magnitude > 1 <- not unit vector
         if self.direction.magnitude() != 0:
@@ -227,7 +227,7 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         # upadte enemy
         self.cooldowns()
-        self.move(self.speed)
+        self.move()
 
     # method with access to the player object
     def enemy_update(self,player):

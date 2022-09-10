@@ -147,16 +147,16 @@ class Player(pygame.sprite.Sprite):
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
 
-    def move(self,speed):
+    def move(self):
         # normalize direction vector to ensure it is a unit vector
         # if direction vector is diagonal the magnitude > 1 <- not unit vector
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
 
-        self.pos_x += self.direction.x * speed
+        self.pos_x += self.direction.x * self.speed
         self.rect.x = round(self.pos_x)
         self.collision('horizontal')
-        self.pos_y += self.direction.y * speed
+        self.pos_y += self.direction.y * self.speed
         self.rect.y = round(self.pos_y)
         self.collision('vertical')        
 
@@ -249,4 +249,4 @@ class Player(pygame.sprite.Sprite):
         # update player
         self.input()
         self.cooldowns()
-        self.move(self.speed)
+        self.move()
