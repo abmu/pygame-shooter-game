@@ -3,11 +3,8 @@ from settings import *
 from pygame import mixer
 from tile import Tile
 from floor import Floor
-from coin import Coin
-from food import Food
 from player import Player
-from enemy import Enemy
-from boss_enemy import BossEnemy
+from bullet import Bullet
 from timer import Timer
 from ui import UI
 from pause_menu import PauseMenu
@@ -15,10 +12,9 @@ from game_over import GameOver
 
 
 class Level:
-    def __init__(self,create_overworld,sounds,username):
+    def __init__(self,sounds,username):
         # general setup
         self.screen = pygame.display.get_surface()
-        self.create_overworld = create_overworld
         self.status = 'play'
         self.sounds = sounds
         self.username = username
@@ -54,28 +50,10 @@ class Level:
         self.map_size = (x,y)
         Floor((0,0),[self.visible_sprites],self.map_size)
 
-        self.player = Player(player_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.sounds)
+        self.player = Player(player_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_bullet,self.sounds)
 
-        # the number of pickups and enemies should be less than the number of possible positions
-        # create enemy sprites in random enemy positions
-        enemy_count = 6 * DIFFICULTY
-        for count in range(enemy_count):
-            Enemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.sounds)
-
-        # create a boss sprite in a random enemy position
-        boss_count = 1 * DIFFICULTY
-        for count in range(boss_count):
-            BossEnemy(enemy_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.sounds)
-
-        # create coin sprites in random pickup positions
-        coin_count = 3
-        for count in range(coin_count):
-            Coin(pickup_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.sounds)
-
-        # create food sprites in random pickup positions
-        food_count = 2 + DIFFICULTY
-        for count in range(food_count):
-            Food(pickup_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.sounds)
+    def create_bullet(self,add_points,increment_stat,get_bullet_stats):
+        Bullet(self.player.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites,add_points,increment_stat,get_bullet_stats)
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -91,7 +69,7 @@ class Level:
     def create_pause(self):
         # pause game if the status is 'play'
         if self.status == 'play':
-            self.pause_menu = PauseMenu(self.create_overworld,self.player.stats,self.username)
+            self.pause_menu = PauseMenu(self.player.stats,self.username)
             self.status = 'pause'
             self.timer.pause()
             mixer.music.pause()
@@ -102,7 +80,7 @@ class Level:
             mixer.music.unpause()
 
     def create_over(self):
-        self.game_over = GameOver(self.create_overworld,self.player.stats,self.username)
+        self.game_over = GameOver(self.player.stats,self.username)
         self.status = 'over'
         self.timer.pause()
         mixer.music.pause()
@@ -111,6 +89,7 @@ class Level:
         # play game ie. let sprites move unless the game is paused or is over
         if self.status == 'over':
             # game over
+            self.player.user_input = False
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             self.screen.fill('white')
             self.game_over.display()
@@ -122,18 +101,21 @@ class Level:
             self.visible_sprites.draw(self.player)
             self.ui.display(self.player,self.timer,self.player.weapon)
 
-            if self.status == 'play':
-                # game playing
-                self.visible_sprites.update()
-                self.visible_sprites.enemy_update(self.player)
+            # game playing
+            self.visible_sprites.update()
+            self.visible_sprites.enemy_update(self.player)
 
-                # check if the game timer has finished
-                if self.timer.is_finish():
-                    self.create_over()
-            elif self.status == 'pause':
+            # check if the game timer has finished
+            if self.timer.is_finish():
+                self.create_over()
+            
+            if self.status == 'pause':
                 # game paused
+                self.player.user_input = False
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                 self.pause_menu.display()
+            else:
+                self.player.user_input = True
 
 
 class CameraGroup(pygame.sprite.Group):

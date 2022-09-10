@@ -4,12 +4,10 @@ import random
 from pygame import mixer
 from settings import *
 from weapon import Weapon
-from bullet import Bullet
-from reload_bar import ReloadBar
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,spawn_positions,groups,obstacle_sprites,visible_sprites,sounds):
+    def __init__(self,spawn_positions,groups,obstacle_sprites,visible_sprites,create_bullet,sounds):
         # player setup
         super().__init__(groups)
         self.spawn_positions = spawn_positions
@@ -40,6 +38,7 @@ class Player(pygame.sprite.Sprite):
 
         # shooting
         self.pressed = False
+        self.create_bullet = create_bullet
         self.attacking = False
         self.attack_time = None
 
@@ -55,11 +54,8 @@ class Player(pygame.sprite.Sprite):
         self.dead = False
 
         # weapons
-        self.weapon = Weapon(self.rect,[self.visible_sprites])
+        self.weapon = Weapon(self.rect,[self.visible_sprites],self.visible_sprites)
         self.update_speed()
-
-        if RELOAD_BAR: # check if the reload bar is enabled in settings file
-            self.reload_bar = ReloadBar(self.rect,self.get_attack_cooldown,[self.visible_sprites])
 
         # sound setup
         self.sounds = sounds
@@ -93,9 +89,6 @@ class Player(pygame.sprite.Sprite):
         self.increment_stat('Deaths')
 
         self.dead = False
-
-    def create_bullet(self):
-        Bullet(self.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites,self.add_points,self.increment_stat,self.weapon.get_bullet_stats)
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -143,7 +136,7 @@ class Player(pygame.sprite.Sprite):
             self.pressed = True
         else:
             if self.pressed:
-                self.create_bullet()
+                self.create_bullet(self.add_points,self.increment_stat,self.weapon.get_bullet_stats)
                 self.sounds.play('shoot_ping')
                 self.pressed = False
 

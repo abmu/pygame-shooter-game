@@ -1,6 +1,7 @@
 import socket
 from _thread import *
 import sys
+from level import Level
 
 
 class Server:
@@ -20,6 +21,9 @@ class Server:
         # set number of clientss
         self.s.listen(2)
         print('Waiting for a connection, server started')
+
+        # setup level
+        self.level = Level()
 
     def threaded_client(self,conn):
         conn.send(str.encode('Connected'))

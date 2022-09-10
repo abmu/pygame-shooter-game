@@ -3,12 +3,11 @@ import random
 from pygame import mixer
 from settings import *
 from enemy import Enemy
-from health_bar import HealthBar
-from level_text import LevelText
+from boss_bullet import BossBullet
 
 
 class BossEnemy(Enemy):
-    def __init__(self,spawn_positions,groups,obstacle_sprites,visible_sprites,create_boss_bullet,sounds):
+    def __init__(self,spawn_positions,groups,obstacle_sprites,visible_sprites,sounds):
         # boss setup
         super().__init__(spawn_positions,groups,obstacle_sprites,visible_sprites,sounds)
 
@@ -23,7 +22,6 @@ class BossEnemy(Enemy):
 
         # attack
         self.attack_radius = BOSS_SIZE/2 + PLAYER_SIZE/2 + 5
-        self.create_boss_bullet = create_boss_bullet
 
         # update the health bar
         self.health_bar.change_rect(self.rect,BOSS_SIZE)
@@ -58,6 +56,10 @@ class BossEnemy(Enemy):
         self.worth = 300
         self.dead = False
 
+    def create_boss_bullet(self,vector):
+        pos = (self.rect.centerx-BOSS_BULLET_SIZE/2,self.rect.centery-BOSS_BULLET_SIZE/2)
+        BossBullet(pos,[self.visible_sprites],self.obstacle_sprites,vector,self.rect)
+
     def calculate_player_distance_direction(self,player):
         # calculate player distance from enemy
         enemy_vector = pygame.math.Vector2(self.rect.center)
@@ -83,7 +85,7 @@ class BossEnemy(Enemy):
             # shoot bullet
             if not self.attacking:
                 self.sounds.play('shoot_ping')
-                self.create_boss_bullet((self.rect.centerx-BOSS_BULLET_SIZE/2,self.rect.centery-BOSS_BULLET_SIZE/2),player_vector-enemy_vector,self.rect)
+                self.create_boss_bullet(player_vector-enemy_vector)
 
                 # slow down speed
                 self.speed -= 2 

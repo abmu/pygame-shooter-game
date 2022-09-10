@@ -28,6 +28,7 @@ class Enemy(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2()
         self.player_distance = None
         self.obstacle_sprites = obstacle_sprites
+        self.visible_sprites = visible_sprites
 
         # attack
         self.attacking = False
@@ -42,9 +43,9 @@ class Enemy(pygame.sprite.Sprite):
         # stats
         self.max_health = 100
         self.health = self.max_health
-        self.health_bar = HealthBar(self.rect,self.get_health,[visible_sprites])
+        self.health_bar = HealthBar(self.rect,self.get_health,[self.visible_sprites])
         self.max_level = 3
-        self.level_text = LevelText(self.rect,self.get_level,[visible_sprites])
+        self.level_text = LevelText(self.rect,self.get_level,[self.visible_sprites])
         self.update_stats(0)
 
         # sound setup
