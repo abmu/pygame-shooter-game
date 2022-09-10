@@ -46,7 +46,9 @@ class Food(pygame.sprite.Sprite):
         self.spawn_positions[spawn_pos] = True
         self.last_pos = spawn_pos
 
-        return spawn_pos
+        # ensure that the food is in the center of the square that they are on
+        offset = (TILE_SIZE-FOOD_SIZE)/2
+        return (spawn_pos[0]+offset,spawn_pos[1]+offset)
 
     def collision(self):
         # handle player collisions

@@ -10,7 +10,7 @@ class TileMini(pygame.sprite.Sprite):
         self.map_size = map_size
         self.image = pygame.Surface((TILE_MINI_SIZE*multiplier,TILE_MINI_SIZE*multiplier)).convert_alpha()
         self.image.fill(self.get_colour())
-        self.rect = self.image.get_rect(topleft = self.get_pos())
+        self.rect = self.image.get_rect(center = self.get_pos())
         self.draw_priority = 4
 
     def get_colour(self):
@@ -36,8 +36,8 @@ class TileMini(pygame.sprite.Sprite):
 
     def get_pos(self):
         # move the mini sprite on the map
-        rect_x = ((self.sprite.rect.x // TILE_SIZE) * TILE_MINI_SIZE) + 20
-        rect_y = (HEIGHT - self.map_size[1] + ((self.sprite.rect.y // TILE_SIZE) * TILE_MINI_SIZE)) - 20
+        rect_x = ((self.sprite.rect.centerx // TILE_SIZE) * TILE_MINI_SIZE) + 20
+        rect_y = (HEIGHT - self.map_size[1] + ((self.sprite.rect.centery // TILE_SIZE) * TILE_MINI_SIZE)) - 20
         return (rect_x,rect_y)
 
     def check_exist(self):

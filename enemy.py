@@ -17,6 +17,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image_2 = pygame.Surface((ENEMY_SIZE,ENEMY_SIZE)).convert_alpha()
         self.image_2.fill('green4')
         self.image = self.image_1
+        self.level = 1 # starting level
         self.rect = self.image.get_rect(topleft = self.get_spawn_pos())
         self.pos_x = self.rect.x
         self.pos_y = self.rect.y
@@ -32,9 +33,6 @@ class Enemy(pygame.sprite.Sprite):
         self.attacking = False
         self.attack_cooldown = 1000
         self.attack_time = None
-        # distance between player and enemy takes the center of the player and enemy
-        # if the enemy is touching the player then attack
-        self.attack_radius = ENEMY_SIZE/2 + PLAYER_SIZE/2 + 5
 
         # hit
         self.hit = False
@@ -42,12 +40,12 @@ class Enemy(pygame.sprite.Sprite):
         self.hit_time = None
 
         # stats
-        self.level = 1 # starting level
-        self.max_level = 3
-        self.update_stats(0)
-
+        self.max_health = 100
+        self.health = self.max_health
         self.health_bar = HealthBar(self.rect,self.get_health,[visible_sprites])
+        self.max_level = 3
         self.level_text = LevelText(self.rect,self.get_level,[visible_sprites])
+        self.update_stats(0)
 
         # sound setup
         self.sounds = sounds
@@ -65,7 +63,9 @@ class Enemy(pygame.sprite.Sprite):
         self.spawn_positions[spawn_pos] = True
         self.last_pos = spawn_pos
 
-        return spawn_pos
+        # ensure that the enemy is in the center of the square that they are on
+        offset = (TILE_SIZE-self.get_size())/2
+        return (spawn_pos[0]+offset,spawn_pos[1]+offset)
 
     def update_stats(self,amount):
         # increase level and stats once the enemy dies
@@ -84,7 +84,29 @@ class Enemy(pygame.sprite.Sprite):
         self.notice_radius = 400 + (self.level*100)
         self.worth = 50 * self.level
 
+        # update enemy size
+        s = self.get_size()
+        self.image_1 = pygame.Surface((s,s)).convert_alpha()
+        self.image_1.fill('green1')
+        self.image_2 = pygame.Surface((s,s)).convert_alpha()
+        self.image_2.fill('green4')
+        self.image = self.image_1
+        self.rect = self.image.get_rect(center = self.rect.center)
+        self.pos_x = self.rect.x
+        self.pos_y = self.rect.y
+
+        # distance between player and enemy takes the center of the player and enemy
+        # if the enemy is touching the player then attack
+        self.attack_radius = s/2 + PLAYER_SIZE/2 + 5
+
+        self.health_bar.change_rect(self.rect,s)
+        self.level_text.change_rect(self.rect)
+
         self.dead = False
+
+    def get_size(self):
+        # return new enemy size
+        return ENEMY_SIZE + (self.level-1)*5
 
     def move(self,speed):
         # normalize direction vector to ensure it is a unit vector
@@ -98,10 +120,10 @@ class Enemy(pygame.sprite.Sprite):
             if self.speed >= self.max_speed:
                 self.speed = self.max_speed
 
-        self.pos_x += self.direction.x * speed
+        self.pos_x += self.direction.x * self.speed
         self.rect.x = round(self.pos_x)
         self.collision('horizontal')
-        self.pos_y += self.direction.y * speed
+        self.pos_y += self.direction.y * self.speed
         self.rect.y = round(self.pos_y)
         self.collision('vertical')
 

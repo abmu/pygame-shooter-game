@@ -26,11 +26,10 @@ class HealthBar(pygame.sprite.Sprite):
         # make position of the health bar underneath the enemy
         return (self.enemy_rect.centerx-self.size//2,self.enemy_rect.centery+self.size//2+10)
 
-    def change_rect(self,rect,get_health,BOSS_SIZE):
+    def change_rect(self,rect,size):
         # change the rect that the health bar is attached to
         self.enemy_rect = rect
-        self.get_health = get_health
-        self.size = BOSS_SIZE
+        self.size = size
 
     def update(self):
         # update enemy health bar

@@ -1,4 +1,5 @@
 import pygame
+import random
 from pygame import mixer
 from settings import *
 from enemy import Enemy
@@ -25,9 +26,26 @@ class BossEnemy(Enemy):
         self.create_boss_bullet = create_boss_bullet
 
         # update the health bar
-        self.health_bar.change_rect(self.rect,self.get_health,BOSS_SIZE)
+        self.health_bar.change_rect(self.rect,BOSS_SIZE)
         # remove level from bosses
         self.level_text.kill()
+
+    def get_spawn_pos(self):
+        # choose a random pos from the boss enemy pos dict
+        # ensure that the pos is not taken and is not a None value
+        spawn_pos = random.choice(list(self.spawn_positions.keys()))
+        while self.spawn_positions[spawn_pos]: # self.spawn_positions[key] <- boolean value saying whether or not pos is currently taken
+            spawn_pos = random.choice(list(self.spawn_positions.keys()))
+            
+        # make the previous pos occupied available and the current pos unavailable
+        if self.last_pos is not None:
+            self.spawn_positions[self.last_pos] = False
+        self.spawn_positions[spawn_pos] = True
+        self.last_pos = spawn_pos
+
+        # ensure that the boss enemy is in the center of the square that they are on
+        offset = (TILE_SIZE-BOSS_SIZE)/2
+        return (spawn_pos[0]+offset,spawn_pos[1]+offset)
 
     def update_stats(self,amount):
         # don't change stats once boss enemy dies
