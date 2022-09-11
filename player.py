@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.image_1 = pygame.Surface((s,s),pygame.SRCALPHA).convert_alpha()
         pygame.gfxdraw.aacircle(self.image_1,s//2,s//2,s//2-1,(255,0,0)) # red1 colour
         pygame.gfxdraw.filled_circle(self.image_1,s//2,s//2,s//2-1,(255,0,0))
-        # setup player hit image image
+        # setup player hit image
         self.image_2 = pygame.Surface((s,s),pygame.SRCALPHA).convert_alpha()
         pygame.gfxdraw.aacircle(self.image_2,s//2,s//2,s//2-1,(139,0,0)) # red4 colour
         pygame.gfxdraw.filled_circle(self.image_2,s//2,s//2,s//2-1,(139,0,0))

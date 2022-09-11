@@ -9,7 +9,10 @@ class Network:
         self.server = '192.168.50.183'
         self.port = 5555
         self.addr = (self.server,self.port)
-        self.id = self.connect()
+        self.p = self.connect()
+
+    def get_p(self):
+        return self.p
 
     def connect(self):
         # connect client

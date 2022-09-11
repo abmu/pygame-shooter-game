@@ -1,7 +1,9 @@
 import socket
 from _thread import *
-import sys
-from level import Level
+import pickle
+import pygame
+from settings import *
+from sprites import Sprites
 
 
 class Server:
@@ -19,41 +21,42 @@ class Server:
             print(str(e))
 
         # set number of clientss
-        self.s.listen(2)
+        self.s.listen(PLAYER_COUNT)
         print('Waiting for a connection, server started')
 
-        # setup level
-        self.level = Level()
+        self.sprites = Sprites()
 
-    def threaded_client(self,conn):
-        conn.send(str.encode('Connected'))
+    def threaded_client(self,conn,id_num):
+        conn.send(pickle.dumps(self.sprites.get_player(id_num)))
         reply = ''
         while True:
             try:
-                data = conn.recv(2048)
-                reply = data.decode('utf-8')
+                data = pickle.loads(conn.recv(2048))
+                self.sprites.update_player(id_num,data)
 
                 # stop receiving from the client
                 if not data:
                     print('Disconnected')
                     break
                 else:
-                    print(f'Recieved: {reply}')
+                    reply = self.sprites.get_sprites(id_num)
 
-                conn.sendall(str.encode(reply))
+                conn.sendall(pickle.dumps(reply))
             except:
-                break
+                 break
 
         print('Lost connection')
         conn.close()
 
     def run(self):
+        id_num = 0
         while True:
             # get the connected client and start new thread
             conn, addr = self.s.accept()
             print(f'Connected to: {addr}')
 
-            start_new_thread(self.threaded_client, (conn,))
+            start_new_thread(self.threaded_client, (conn,id_num))
+            id_num += 1
 
 if __name__ == '__main__':
     server = Server()

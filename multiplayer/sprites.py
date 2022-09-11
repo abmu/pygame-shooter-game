@@ -1,56 +1,46 @@
-import pygame
 from settings import *
-from pygame import mixer
-from tile import Tile
-from floor import Floor
 from player import Player
-from bullet import Bullet
-from timer import Timer
-from ui import UI
-from pause_menu import PauseMenu
-from game_over import GameOver
 
 
 class Sprites:
-    def __init__(self,sounds,username):
-        # general setup
-        self.screen = pygame.display.get_surface()
-        self.status = 'play'
-        self.sounds = sounds
-        self.username = username
+    def __init__(self):
+        # sprites setup
+        self.s_list = []
+        self.sprite_setup()
 
-        # sprite group and sprite setup
-        self.visible_sprites = pygame.sprite.Group()
-        self.obstacle_sprites = pygame.sprite.Group()
-        self.create_map()
-
-        # user interface
-        self.ui = UI(self.visible_sprites,self.map_size)
-        self.timer = Timer(GAME_LENGTH)
-        self.pause_pressed = False
-
-    def create_map(self):
-        player_pos = {}
-        enemy_pos = {}
-        pickup_pos = {}
+    def sprite_setup(self):
+        id_num = 0
         for row_index, row in enumerate(MAP_ARRAY):
             for col_index, col in enumerate(row):
                 # create sprites at correct positions
                 x = col_index * TILE_SIZE
                 y = row_index * TILE_SIZE
                 if col == 'x':
-                    Tile((x,y),[self.visible_sprites,self.obstacle_sprites])
+                    pass
                 elif col == 'P':
-                    player_pos[(x,y)] = False # ie. (x,y) position is not currently occupied
-                elif col == 'E':
-                    enemy_pos[(x,y)] = False
-                elif col == 'C':
-                    pickup_pos[(x,y)] = False
+                    if id_num < PLAYER_COUNT:
+                        self.s_list.append(Player(id_num,(x,y)))
+                        id_num += 1
 
-        self.map_size = (x,y)
-        Floor((0,0),[self.visible_sprites],self.map_size)
+    def get_sprites(self,id_num):
+        # return all sprites besides player specified
+        s_copy = self.s_list.copy()
+        for sprite in self.s_list:
+            if sprite.__class__.__name__ == 'Player':
+                if sprite.id_num == id_num:
+                    s_copy.remove(sprite)
+        return s_copy
 
-        self.player = Player(player_pos,[self.visible_sprites,self.obstacle_sprites],self.obstacle_sprites,self.visible_sprites,self.create_bullet,self.sounds)
+    def get_player(self,id_num):
+        # return player object
+        for sprite in self.s_list:
+            if sprite.__class__.__name__ == 'Player':
+                if sprite.id_num == id_num:
+                    return sprite
 
-    def create_bullet(self,add_points,increment_stat,get_bullet_stats):
-        Bullet(self.player.weapon.get_pos(),[self.visible_sprites],self.obstacle_sprites,self.visible_sprites,add_points,increment_stat,get_bullet_stats)
+    def update_player(self,id_num,data):
+        # update player object
+        for s_index, sprite in enumerate(self.s_list):
+            if sprite.__class__.__name__ == 'Player':
+                if sprite.id_num == id_num:
+                    self.s_list[s_index] = data

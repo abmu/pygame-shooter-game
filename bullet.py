@@ -12,7 +12,7 @@ class Bullet(pygame.sprite.Sprite):
         orig_image = pygame.Surface((bullet_size,bullet_size)).convert_alpha()
         orig_image.fill('red')
         orig_rect = orig_image.get_rect(topleft = pos)
-        middle_pos = visible_sprites.get_middle_pos()
+        middle_pos = (WIDTH/2,HEIGHT/2)
         mouse_pos = pygame.mouse.get_pos()
         self.set_direction(middle_pos,mouse_pos)
         self.rotate(orig_image,orig_rect)

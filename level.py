@@ -141,17 +141,12 @@ class CameraGroup(pygame.sprite.Group):
         # general setup
         super().__init__()
         self.screen = pygame.display.get_surface()
-        self.half_width = self.screen.get_size()[0] // 2
-        self.half_height = self.screen.get_size()[1] // 2
         self.offset = pygame.math.Vector2()
-
-    def get_middle_pos(self):
-        return (self.half_width,self.half_height)
 
     def draw(self,player):
         # get offset
-        self.offset.x = player.rect.centerx - self.half_width
-        self.offset.y = player.rect.centery - self.half_height
+        self.offset.x = player.rect.centerx - WIDTH/2
+        self.offset.y = player.rect.centery - HEIGHT/2
 
         # sprites drawn later will be drawn on top
         # draw weapon on top of the tiles

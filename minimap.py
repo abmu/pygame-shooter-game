@@ -34,6 +34,8 @@ class Minimap():
                     multiplier = 1
                     if sprite.__class__.__name__ == 'BossEnemy':
                         multiplier = 2
+                    elif sprite.__class__.__name__ == 'Enemy':
+                        multiplier = 1.25
                     TileMini([self.minimap_sprites],sprite,self.map_size,multiplier)
 
     def display(self):

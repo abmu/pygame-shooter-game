@@ -1,10 +1,7 @@
 import pygame
 import sys
-from pygame import mixer
 from settings import *
-from level import Level
-from sounds import Sounds
-
+from network import Network
 
 class Game:
     def __init__(self):
@@ -16,19 +13,14 @@ class Game:
         pygame.display.set_icon(icon)
         self.clock = pygame.time.Clock()
 
-        # sound setup
-        self.sounds = Sounds()
-
-        # default game screen
-        self.create_level()
-
-    def create_level(self):
-        self.level = Level(self.sounds,'Test')
-        self.status = 'level'
+        self.network = Network()
+        self.player = self.network.get_p()
 
     def run(self):
         # game loop
         while True:
+            sprites = self.network.send(self.player)
+
             event_list = pygame.event.get()
             for event in event_list:
                 if event.type == pygame.QUIT:
@@ -36,9 +28,14 @@ class Game:
                     sys.exit()
 
             # update screen
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR)
-            self.screen.fill('black')
-            self.level.run()
+            self.screen.fill('white')
+
+            self.player.update(sprites)
+            self.player.draw(self.screen)
+
+            for sprite in sprites:
+                sprite.draw(self.screen)
+
             pygame.display.update()
             self.clock.tick(FPS)
 
