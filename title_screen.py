@@ -19,10 +19,11 @@ class TitleScreen:
         # title, text and buttons setup
         self.title_setup()
         self.line_setup()
-        self.name_text = Text(f'Name: {self.username}',(WIDTH/2+50,HEIGHT/2-80))
+        self.name_text = Text(f'Name: {self.username}',(WIDTH/2+50,HEIGHT/2-105))
         self.points_text_setup()
-        self.play_button = Button('PLAY',(WIDTH/2+50,HEIGHT/2+10),self.create_level)
-        self.settings_button = Button('SETTINGS',(WIDTH/2+50,HEIGHT/2+50),self.create_settings)
+        self.singleplayer_button = Button('SINGLEPLAYER',(WIDTH/2+50,HEIGHT/2-15),self.create_level)
+        self.multiplayer_button = Button('MULTIPLAYER',(WIDTH/2+50,HEIGHT/2+25),self.blank)
+        self.settings_button = Button('SETTINGS',(WIDTH/2+50,HEIGHT/2+65),self.create_settings)
         self.back_button = Button('LOGOUT',(10,5),self.create_animation)
         self.quit_button = Button('QUIT',(10,45),self.quit)
 
@@ -39,6 +40,10 @@ class TitleScreen:
         self.acc_sign = 1 # positive acceleration
         self.acc_magnitude = 2/9 # calculated using SUVAT
 
+    def blank(self):
+        # button function placeholder
+        pass
+
     def create_animation(self):        
         # begin animation
         self.hide = True
@@ -50,7 +55,8 @@ class TitleScreen:
             self.line_image.set_alpha(self.alpha)
             self.name_text.set_alpha(self.alpha)
             self.points_text.set_alpha(self.alpha)
-            self.play_button.set_alpha(self.alpha)
+            self.singleplayer_button.set_alpha(self.alpha)
+            self.multiplayer_button.set_alpha(self.alpha)
             self.settings_button.set_alpha(self.alpha)
             self.back_button.set_alpha(self.alpha)
             self.quit_button.set_alpha(self.alpha)
@@ -122,7 +128,7 @@ class TitleScreen:
                 writer = csv.DictWriter(f,fieldnames=f_names)
                 writer.writerow({'USERNAME':self.username,'POINTS':points,'GAMESPLAYED':0})
 
-        self.points_text = Text(f'Total Points: {points}',(WIDTH/2+50,HEIGHT/2-40))
+        self.points_text = Text(f'Total Points: {points}',(WIDTH/2+50,HEIGHT/2-65))
 
     def quit(self):
         pygame.quit()
@@ -146,7 +152,8 @@ class TitleScreen:
         self.screen.blit(self.line_image,self.line_rect)
         self.name_text.display()
         self.points_text.display()
-        self.play_button.display()
+        self.singleplayer_button.display()
+        self.multiplayer_button.display()
         self.settings_button.display()
         self.quit_button.display()
         self.back_button.display()

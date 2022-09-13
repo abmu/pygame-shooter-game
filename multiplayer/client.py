@@ -28,7 +28,7 @@ class Game:
                     sys.exit()
 
             # update screen
-            self.screen.fill('white')
+            self.screen.fill('black')
 
             self.player.update(sprites)
             self.player.draw(self.screen)

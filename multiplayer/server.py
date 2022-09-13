@@ -1,6 +1,7 @@
 import socket
 from _thread import *
 import pickle
+import struct
 import pygame
 from settings import *
 from sprites import Sprites
@@ -40,6 +41,10 @@ class Server:
                     break
                 else:
                     reply = self.sprites.get_sprites(id_num)
+                
+                # data = pickle.dumps(reply)
+                # size = len(data)
+                # print(size)
 
                 conn.sendall(pickle.dumps(reply))
             except:

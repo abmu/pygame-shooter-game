@@ -26,4 +26,3 @@ class Text:
         # update and draw text
         self.text_surf.set_alpha(self.alpha)
         self.screen.blit(self.text_surf,self.text_rect)
-

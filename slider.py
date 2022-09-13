@@ -31,7 +31,7 @@ class Slider:
         text.display()
 
     def check_hover(self):
-        # change cursor to 'IBEAM' if the cursor is hovering over the text box
+        # change cursor to a hand if the cursor is hovering over the slider
         if self.slider_rect.collidepoint(pygame.mouse.get_pos()) or self.current_rect.collidepoint(pygame.mouse.get_pos()):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
 

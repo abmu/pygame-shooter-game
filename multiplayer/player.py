@@ -1,5 +1,4 @@
 import pygame
-import pygame.gfxdraw
 from settings import *
 
 
@@ -55,7 +54,7 @@ class Player:
         if self.joined:
             pygame.draw.rect(screen,self.colour,self.rect)
 
-    def update(self):
+    def update(self,sprites):
         # update player
         self.input()
         self.move()

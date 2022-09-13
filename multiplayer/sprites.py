@@ -1,5 +1,6 @@
 from settings import *
 from player import Player
+from tile import Tile
 
 
 class Sprites:
@@ -16,7 +17,7 @@ class Sprites:
                 x = col_index * TILE_SIZE
                 y = row_index * TILE_SIZE
                 if col == 'x':
-                    pass
+                    self.s_list.append(Tile((x,y)))
                 elif col == 'P':
                     if id_num < PLAYER_COUNT:
                         self.s_list.append(Player(id_num,(x,y)))
