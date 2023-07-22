@@ -15,7 +15,7 @@ class Login:
         # title, text and buttons setup
         self.title_setup()
         self.line_setup()
-        self.name_text = Text(f'Username',(WIDTH/2-350,HEIGHT/2-75))
+        self.name_text = Text('Username',(WIDTH/2-350,HEIGHT/2-75))
         self.text_box = TextBox((WIDTH/2-350,HEIGHT/2-25))
         self.login_button = Button('LOGIN',(WIDTH/2-350,HEIGHT/2+35),self.create_animation)
         self.quit_button = Button('QUIT',(10,5),self.quit)

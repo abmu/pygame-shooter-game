@@ -2,7 +2,7 @@
 WIDTH = 1280
 HEIGHT = 720
 FPS = 60
-GAME_LENGTH = 60
+GAME_LENGTH = 120
 TITLE = 'Shooter Game'
 ICON = 'graphics/icon.png'
 MUSIC = 'audio/8-bit-Monsters.mp3'
