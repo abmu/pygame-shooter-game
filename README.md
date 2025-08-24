@@ -1,3 +1,3 @@
 # pygame-shooter-game
 
-A game developed using Pygame for my A-Level OCR Computer Science coursework.
+A 2D shooter game developed using Pygame for my A-Level OCR Computer Science coursework.
